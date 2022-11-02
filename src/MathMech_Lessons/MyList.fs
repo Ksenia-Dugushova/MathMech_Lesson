@@ -33,7 +33,7 @@ let BubbleSort (lst: MyList<'value>) =
 
     rez
 
-///
+///Функция получает MyList и значение, возвращает кортеж с двумя списками
 let rec sortList (lst: MyList<'value>) a =
     match lst with
     | Empty -> Empty, Empty

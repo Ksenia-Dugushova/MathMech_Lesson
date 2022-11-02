@@ -12,6 +12,7 @@ module MyList =
             <| fun _ ->
                 let actualResult =
                     MyListHW.сoncatenation (Cons(1, Cons(5, Empty))) (Cons(2, Cons(9, Empty)))
+
                 Expect.equal
                     actualResult
                     (Cons(1, Cons(5, (Cons(2, Cons(9, Empty))))))
@@ -25,6 +26,7 @@ module MyList =
             testCase "3 test for concatenation ML"
             <| fun _ ->
                 let actualResult = MyListHW.сoncatenation (Cons(1, Cons(2, Cons(3, Empty)))) Empty
+
                 Expect.equal
                     actualResult
                     (Cons(1, Cons(2, Cons(3, Empty))))
@@ -120,6 +122,7 @@ module OOPList =
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
                     OM(BubbleSort lst)
+
                 Expect.equal
                     actualResult
                     (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty)))
@@ -130,6 +133,7 @@ module OOPList =
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
                     OM(BubbleSort lst)
+
                 Expect.equal
                     actualResult
                     (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty)))
@@ -140,6 +144,7 @@ module OOPList =
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
                     OM(QuickSort lst)
+
                 Expect.equal
                     actualResult
                     (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty)))
@@ -150,6 +155,7 @@ module OOPList =
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
                     OM(QuickSort lst)
+
                 Expect.equal
                     actualResult
                     (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty)))

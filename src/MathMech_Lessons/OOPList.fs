@@ -76,7 +76,7 @@ let BubbleSort (lst: OOPList<'value>) =
 
     rez
 
-///
+///Функция получает OOPList и значение, возвращает кортеж с двумя списками
 let rec sortList (lst: OOPList<'value>) a =
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>, EmptyList() :> OOPList<'value>
