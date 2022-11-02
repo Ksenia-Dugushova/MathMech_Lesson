@@ -1,133 +1,157 @@
 namespace MathMech_lessons.Tests
 
 open Expecto
-open MathMech_lessons.Main
 
-module SayTests =
+module MyList =
+    open MyListHW
+
     [<Tests>]
     let tests =
         testList "samples" [
-            testCase "1 test for exponentiation in a simple way"
-            <| fun _ ->
-                let actualResult = f1 2 10
-                Expect.equal actualResult 1024 "The answer isn't correct"
-
-            testCase "2 test for exponentiation in a simple way"
-            <| fun _ ->
-                let actualResult = f1 0 5
-                Expect.equal actualResult 0 "The answer isn't correct"
-
-            testCase "3 test for exponentiation in a simple way"
-            <| fun _ ->
-                let actualResult = f1 1 5
-                Expect.equal actualResult 1 "The answer isn't correct"
-
-            testCase "4 test for exponentiation in a simple way"
-            <| fun _ ->
-                let actualResult = f1 -2 5
-                Expect.equal actualResult -32 "The answer isn't correct"
-
-
-            testCase "1 test for exponentiation in a fast way"
-            <| fun _ ->
-                let actualResult = f2 2 10
-                Expect.equal actualResult 1024 "The answer isn't correct"
-
-            testCase "2 test for exponentiation in a fast way"
-            <| fun _ ->
-                let actualResult = f2 0 5
-                Expect.equal actualResult 0 "The answer isn't correct"
-
-            testCase "3 test for exponentiation in a fast way"
-            <| fun _ ->
-                let actualResult = f2 1 5
-                Expect.equal actualResult 1 "The answer isn't correct"
-
-            testCase "4 test for exponentiation in a fast way"
-            <| fun _ ->
-                let actualResult = f2 -2 5
-                Expect.equal actualResult -32 "The answer isn't correct"
-
-
-            testCase "1 test for difference"
+            testCase "1 test for concatenation ML"
             <| fun _ ->
                 let actualResult =
-                    f3 [|
-                        1
-                        2
-                        3
-                    |]
+                    MyListHW.сoncatenation (Cons(1, Cons(5, Empty))) (Cons(2, Cons(9, Empty)))
+                Expect.equal
+                    actualResult
+                    (Cons(1, Cons(5, (Cons(2, Cons(9, Empty))))))
+                    "The result should be (Cons(1, Cons(5, (Cons(2, Cons(9, Empty))))))"
 
-                Expect.equal actualResult 2 "The answer isn't correct"
+            testCase "2 test for concatenation ML"
+            <| fun _ ->
+                let actualResult = MyListHW.сoncatenation Empty Empty
+                Expect.equal actualResult Empty "The result should be Empty"
 
-            testCase "2 test for difference"
+            testCase "3 test for concatenation ML"
+            <| fun _ ->
+                let actualResult = MyListHW.сoncatenation (Cons(1, Cons(2, Cons(3, Empty)))) Empty
+                Expect.equal
+                    actualResult
+                    (Cons(1, Cons(2, Cons(3, Empty))))
+                    "The result should be Cons(1, Cons(2, Cons(3, Empty)))"
+
+            testCase "1 test for BubbleSort ML"
             <| fun _ ->
                 let actualResult =
-                    f3 [|
-                        0
-                        0
-                        0
-                    |]
-
-                Expect.equal actualResult 0 "The answer isn't correct"
-
-            testCase "3 test for difference"
-            <| fun _ ->
-                let actualResult =
-                    f3 [|
-                        -1
-                        2
-                        -13
-                        9
-                    |]
-
-                Expect.equal actualResult 22 "The answer isn't correct"
-
-
-            testCase "1 test for array"
-            <| fun _ ->
-                let actualResult = f4 1 5
-                Expect.equal actualResult [| 3 |] "The answer isn't correct"
-
-            testCase "2 test for array"
-            <| fun _ ->
-                let actualResult = f4 5 13
+                    MyListHW.BubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
 
                 Expect.equal
                     actualResult
-                    [|
-                        7
-                        9
-                        11
-                    |]
-                    "The answer isn't correct"
+                    (Cons(-100, Cons(0, Cons(15, Cons(20, Empty)))))
+                    "The result should be Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))"
 
-            testCase "3 test for array"
+            testCase "2 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = f4 2 14
+                let actualResult = MyListHW.BubbleSort Empty
+                Expect.equal actualResult Empty "The result should be Empty"
+
+            testCase "3 test for BubbleSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.BubbleSort(Cons("ab", Cons("a", Cons("abc", Empty))))
 
                 Expect.equal
                     actualResult
-                    [|
-                        3
-                        5
-                        7
-                        9
-                        11
-                        13
-                    |]
-                    "The answer isn't correct"
-            testCase "4 test for array"
+                    (Cons("a", Cons("ab", Cons("abc", Empty))))
+                    "The result should be (Cons('a', Cons('ab', Cons('abc', Empty))))"
+
+            testCase "4 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = f4 -5 3
+                let actualResult = MyListHW.BubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
 
                 Expect.equal
                     actualResult
-                    [|
-                        -3
-                        -1
-                        1
-                    |]
-                    "The answer isn't correct"
+                    (Cons(5, Cons(5, Cons(5, Empty))))
+                    "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
 
+            testCase "5 test for BubbleSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.BubbleSort(Cons(0, Empty))
+                Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
+
+            testCase "1 test for QuickSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.QuickSort(Cons(0, Empty))
+                Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
+
+            testCase "2 test for QuickSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.QuickSort(Cons(1, Cons(5, Cons(-10, Empty))))
+
+                Expect.equal
+                    actualResult
+                    (Cons(-10, Cons(1, Cons(5, Empty))))
+                    "The result should be Cons(-10, Cons(1, Cons(5, Empty)))"
+
+            testCase "3 test for QuickSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.QuickSort Empty
+                Expect.equal actualResult Empty "The result should be Empty"
+        ]
+
+module OOPList =
+    open OOPListHW
+    //open MyListHW
+    [<Tests>]
+    let tests =
+        testList "samples" [
+            testCase "1 test for concatenation OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst1 = EmptyList()
+                    let lst2 = EmptyList()
+                    OM(сoncatenation lst1 lst2)
+
+                Expect.equal actualResult MyListHW.Empty "The result should be MyListHW.Empty"
+
+            testCase "2 test for concatenation OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst1 = List(5, EmptyList())
+                    let lst2 = List(5, EmptyList())
+                    OM(сoncatenation lst1 lst2)
+
+                Expect.equal
+                    actualResult
+                    (MyListHW.Cons(5, MyListHW.Cons(5, MyListHW.Empty)))
+                    "The result should be MyListHW.Cons(5, MyListHW.Cons(5, MyListHW.Empty)))"
+
+            testCase "1 test for BubbleSort OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst = List(1, List(2, EmptyList()))
+                    OM(BubbleSort lst)
+                Expect.equal
+                    actualResult
+                    (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty)))
+                    "The result should be MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))"
+
+            testCase "2 test for BubbleSort OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst = List("a", List("b", EmptyList()))
+                    OM(BubbleSort lst)
+                Expect.equal
+                    actualResult
+                    (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty)))
+                    "The result should be MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))"
+
+            testCase "1 test for QuickSort OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst = List(1, List(2, EmptyList()))
+                    OM(QuickSort lst)
+                Expect.equal
+                    actualResult
+                    (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty)))
+                    "The result should be MyListHW.Cons(1, MyListHW.Cons(3, MyListHW.Empty))"
+
+            testCase "2 test for QuickSort OL"
+            <| fun _ ->
+                let actualResult =
+                    let lst = List("a", List("b", EmptyList()))
+                    OM(QuickSort lst)
+                Expect.equal
+                    actualResult
+                    (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty)))
+                    "The result should be MyListHW.Cons('a', MyListHW.Cons('b', MyListHW.Empty))"
         ]
