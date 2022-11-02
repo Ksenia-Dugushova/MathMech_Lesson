@@ -224,26 +224,18 @@ var assemblies = [
   {
     "name": "MathMech_Lessons",
     "classes": [
-      { "name": "MathMech_lessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 47, "ucl": 14, "cal": 61, "tl": 105, "ct": "LineCoverage", "mc": "-", "cb": 41, "tb": 52, "lch": [], "bch": [], "hc": [] },
+      { "name": "MathMech_lessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "MyListHW", "rp": "MathMech_Lessons_MyListHW.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 19, "tb": 20, "lch": [], "bch": [], "hc": [] },
+      { "name": "OOPListHW", "rp": "MathMech_Lessons_OOPListHW.html", "cl": 42, "ucl": 14, "cal": 56, "tl": 108, "ct": "LineCoverage", "mc": "-", "cb": 28, "tb": 42, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
-      { "name": "NPath complexity", "explanationUrl": "https://modess.io/npath-complexity-cyclomatic-complexity-explained" },
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "MathMech_Lessons", "class": "MathMech_lessons.Main", "reportPath": "MathMech_Lessons_Main.html", "methodName": "System.Double MathMech_lessons.Main::f1(System.Double,System.Int32)", "methodShortName": "f1(...)", "fileIndex": 0, "line": 10,
-    "metrics": [
-      { "value": 11, "exceeded": false },
-      { "value": 512, "exceeded": true },
-      { "value": 18.25, "exceeded": true },
-    ]},
 ];
 
 var branchCoverageAvailable = true;
