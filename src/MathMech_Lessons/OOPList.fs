@@ -43,16 +43,16 @@ let rec lenght (lst: OOPList<'value>) =
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция преобразовывает MyList в OOPList
-let rec MO (lst: MyList<'value>) =
+let rec MyList_OOPList (lst: MyList<'value>) =
     match lst with
     | Empty -> EmptyList() :> OOPList<'value>
-    | Cons (head, tail) -> List(head, MO tail)
+    | Cons (head, tail) -> List(head, MyList_OOPList tail)
 
 ///Функция преобразовывает OOPList в MyList
-let rec OM (lst: OOPList<'value>) =
+let rec OOPList_MyList (lst: OOPList<'value>) =
     match lst with
     | :? EmptyList<'value> -> Empty
-    | :? List<'value> as lst -> Cons(lst.Head, OM lst.Tail)
+    | :? List<'value> as lst -> Cons(lst.Head, OOPList_MyList lst.Tail)
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///BubbleSort
@@ -82,11 +82,7 @@ let rec sortList (lst: OOPList<'value>) a =
     | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>, EmptyList() :> OOPList<'value>
     | :? List<'value> as lst ->
         let sorted = sortList lst.Tail a
-
-        if
-            lst.Head
-            <= a
-        then
+        if lst.Head <= a then
             List(lst.Head, fst sorted), snd sorted
         else
             fst sorted, List(lst.Head, snd sorted)

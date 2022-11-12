@@ -101,7 +101,7 @@ module OOPList =
                 let actualResult =
                     let lst1 = EmptyList()
                     let lst2 = EmptyList()
-                    OM(сoncatenation lst1 lst2)
+                    OOPList_MyList(сoncatenation lst1 lst2)
 
                 Expect.equal actualResult MyListHW.Empty "The result should be MyListHW.Empty"
 
@@ -110,7 +110,7 @@ module OOPList =
                 let actualResult =
                     let lst1 = List(5, EmptyList())
                     let lst2 = List(5, EmptyList())
-                    OM(сoncatenation lst1 lst2)
+                    OOPList_MyList(сoncatenation lst1 lst2)
 
                 Expect.equal
                     actualResult
@@ -121,7 +121,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
-                    OM(BubbleSort lst)
+                    OOPList_MyList(BubbleSort lst)
 
                 Expect.equal
                     actualResult
@@ -132,7 +132,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
-                    OM(BubbleSort lst)
+                    OOPList_MyList(BubbleSort lst)
 
                 Expect.equal
                     actualResult
@@ -143,7 +143,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
-                    OM(QuickSort lst)
+                    OOPList_MyList(QuickSort lst)
 
                 Expect.equal
                     actualResult
@@ -154,7 +154,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
-                    OM(QuickSort lst)
+                    OOPList_MyList(QuickSort lst)
 
                 Expect.equal
                     actualResult

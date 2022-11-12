@@ -33,17 +33,17 @@ let BubbleSort (lst: MyList<'value>) =
 
     rez
 
-///Функция получает MyList и значение, возвращает кортеж с двумя списками
-let rec sortList (lst: MyList<'value>) a =
+///Функция получает MyList и значение, возвращает кортеж с двумя списками, сравнивая элементы листа с полученным значением
+let rec separationList (lst: MyList<'value>) a =
     match lst with
     | Empty -> Empty, Empty
     | Cons (head, tail) ->
-        let sorted = sortList tail a
+        let part = separationList tail a
 
         if head <= a then
-            Cons(head, fst sorted), snd sorted
+            Cons(head, fst part), snd part
         else
-            fst sorted, Cons(head, snd sorted)
+            fst part, Cons(head, snd part)
 
 ///QuickSort
 let QuickSort (lst: MyList<'value>) =
@@ -52,7 +52,7 @@ let QuickSort (lst: MyList<'value>) =
         | Empty -> Empty
         | Cons (head, Empty) -> Cons(head, Empty)
         | Cons (head, tail) ->
-            let sorted = sortList tail head
-            сoncatenation (Quick(fst sorted)) (Cons(head, Quick(snd sorted)))
+            let part = separationList tail head
+            сoncatenation (Quick(fst part)) (Cons(head, Quick(snd part)))
 
     Quick lst
