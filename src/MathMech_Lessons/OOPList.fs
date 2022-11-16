@@ -43,10 +43,10 @@ let rec lenght (lst: OOPList<'value>) =
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция преобразовывает MyList в OOPList
-let rec MyList_OOPList (lst: MyList<'value>) =
+let rec myList_OOPList (lst: MyList<'value>) =
     match lst with
     | Empty -> EmptyList() :> OOPList<'value>
-    | Cons (head, tail) -> List(head, MyList_OOPList tail)
+    | Cons (head, tail) -> List(head, myList_OOPList tail)
 
 ///Функция преобразовывает OOPList в MyList
 let rec OOPList_MyList (lst: OOPList<'value>) =
@@ -56,7 +56,7 @@ let rec OOPList_MyList (lst: OOPList<'value>) =
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///BubbleSort
-let BubbleSort (lst: OOPList<'value>) =
+let bubbleSort (lst: OOPList<'value>) =
     let rec bubble (lst: OOPList<'value>) =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>
@@ -89,8 +89,8 @@ let rec sortList (lst: OOPList<'value>) a =
     | _ -> failwith $"You can use EmptyList or list types"
 
 ///QuickSort
-let QuickSort (lst: OOPList<'value>) =
-    let rec Quick (lst: OOPList<'value>) =
+let quickSort (lst: OOPList<'value>) =
+    let rec quick (lst: OOPList<'value>) =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>
         | :? List<'value> as lst ->
@@ -98,7 +98,7 @@ let QuickSort (lst: OOPList<'value>) =
                 List(lst.Head, EmptyList())
             else
                 let tailMinMax = sortList (List(head lst.Tail, tail lst.Tail)) lst.Head
-                сoncatenation (Quick(fst tailMinMax)) (List(lst.Head, Quick(snd tailMinMax)))
+                сoncatenation (quick(fst tailMinMax)) (List(lst.Head, quick(snd tailMinMax)))
         | _ -> failwith $"You can use EmptyList or list types"
 
-    Quick lst
+    quick lst

@@ -18,7 +18,7 @@ let rec lenght (lst: MyList<'value>) =
         + 1
 
 ///Bubble Sort
-let BubbleSort (lst: MyList<'value>) =
+let bubbleSort (lst: MyList<'value>) =
     let rec bubble (lst: MyList<'value>) =
         match lst with
         | Empty -> Empty
@@ -46,13 +46,13 @@ let rec separationList (lst: MyList<'value>) a =
             fst part, Cons(head, snd part)
 
 ///QuickSort
-let QuickSort (lst: MyList<'value>) =
-    let rec Quick (lst: MyList<'value>) =
+let quickSort (lst: MyList<'value>) =
+    let rec quick (lst: MyList<'value>) =
         match lst with
         | Empty -> Empty
         | Cons (head, Empty) -> Cons(head, Empty)
         | Cons (head, tail) ->
             let part = separationList tail head
-            сoncatenation (Quick(fst part)) (Cons(head, Quick(snd part)))
+            сoncatenation (quick(fst part)) (Cons(head, quick(snd part)))
 
-    Quick lst
+    quick lst

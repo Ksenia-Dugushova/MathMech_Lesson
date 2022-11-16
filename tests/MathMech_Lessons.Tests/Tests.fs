@@ -35,7 +35,7 @@ module MyList =
             testCase "1 test for BubbleSort ML"
             <| fun _ ->
                 let actualResult =
-                    MyListHW.BubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
+                    MyListHW.bubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
 
                 Expect.equal
                     actualResult
@@ -44,12 +44,12 @@ module MyList =
 
             testCase "2 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.BubbleSort Empty
+                let actualResult = MyListHW.bubbleSort Empty
                 Expect.equal actualResult Empty "The result should be Empty"
 
-            testCase "3 test for BubbleSort ML"
+            testCase "3 test for bubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.BubbleSort(Cons("ab", Cons("a", Cons("abc", Empty))))
+                let actualResult = MyListHW.bubbleSort(Cons("ab", Cons("a", Cons("abc", Empty))))
 
                 Expect.equal
                     actualResult
@@ -58,7 +58,7 @@ module MyList =
 
             testCase "4 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.BubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
+                let actualResult = MyListHW.bubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
 
                 Expect.equal
                     actualResult
@@ -67,17 +67,17 @@ module MyList =
 
             testCase "5 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.BubbleSort(Cons(0, Empty))
+                let actualResult = MyListHW.bubbleSort(Cons(0, Empty))
                 Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
 
             testCase "1 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.QuickSort(Cons(0, Empty))
+                let actualResult = MyListHW.quickSort(Cons(0, Empty))
                 Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
 
             testCase "2 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.QuickSort(Cons(1, Cons(5, Cons(-10, Empty))))
+                let actualResult = MyListHW.quickSort(Cons(1, Cons(5, Cons(-10, Empty))))
 
                 Expect.equal
                     actualResult
@@ -86,7 +86,7 @@ module MyList =
 
             testCase "3 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.QuickSort Empty
+                let actualResult = MyListHW.quickSort Empty
                 Expect.equal actualResult Empty "The result should be Empty"
         ]
 
@@ -121,7 +121,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
-                    OOPList_MyList(BubbleSort lst)
+                    OOPList_MyList(bubbleSort lst)
 
                 Expect.equal
                     actualResult
@@ -132,7 +132,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
-                    OOPList_MyList(BubbleSort lst)
+                    OOPList_MyList(bubbleSort lst)
 
                 Expect.equal
                     actualResult
@@ -143,7 +143,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List(1, List(2, EmptyList()))
-                    OOPList_MyList(QuickSort lst)
+                    OOPList_MyList(quickSort lst)
 
                 Expect.equal
                     actualResult
@@ -154,7 +154,7 @@ module OOPList =
             <| fun _ ->
                 let actualResult =
                     let lst = List("a", List("b", EmptyList()))
-                    OOPList_MyList(QuickSort lst)
+                    OOPList_MyList(quickSort lst)
 
                 Expect.equal
                     actualResult
