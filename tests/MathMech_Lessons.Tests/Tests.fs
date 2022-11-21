@@ -1,6 +1,6 @@
 namespace MathMech_lessons.Tests
 
-open FsCheck
+open FsCheck 
 open Expecto
 
 module MyList =
