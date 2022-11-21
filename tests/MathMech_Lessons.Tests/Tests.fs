@@ -36,7 +36,7 @@ module MyList =
             testCase "1 test for BubbleSort ML"
             <| fun _ ->
                 let actualResult =
-                    MyListHW.bubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
+                    MyListHW.bubbleSort (Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
 
                 Expect.equal
                     actualResult
@@ -50,7 +50,7 @@ module MyList =
 
             testCase "3 test for bubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.bubbleSort(Cons("ab", Cons("a", Cons("abc", Empty))))
+                let actualResult = MyListHW.bubbleSort (Cons("ab", Cons("a", Cons("abc", Empty))))
 
                 Expect.equal
                     actualResult
@@ -59,22 +59,26 @@ module MyList =
 
             testCase "4 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.bubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
-                Expect.equal actualResult (Cons(5, Cons(5, Cons(5, Empty)))) "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
+                let actualResult = MyListHW.bubbleSort (Cons(5, Cons(5, Cons(5, Empty))))
+
+                Expect.equal
+                    actualResult
+                    (Cons(5, Cons(5, Cons(5, Empty))))
+                    "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
 
             testCase "5 test for BubbleSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.bubbleSort(Cons(0, Empty))
+                let actualResult = MyListHW.bubbleSort (Cons(0, Empty))
                 Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
 
             testCase "1 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.quickSort(Cons(0, Empty))
+                let actualResult = MyListHW.quickSort (Cons(0, Empty))
                 Expect.equal actualResult (Cons(0, Empty)) "The result should be Cons(0, Empty)"
 
             testCase "2 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.quickSort(Cons(1, Cons(5, Cons(-10, Empty))))
+                let actualResult = MyListHW.quickSort (Cons(1, Cons(5, Cons(-10, Empty))))
 
                 Expect.equal
                     actualResult
@@ -88,20 +92,37 @@ module MyList =
 
             testCase "4 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.bubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
-                Expect.equal actualResult (Cons(5, Cons(5, Cons(5, Empty)))) "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
+                let actualResult = MyListHW.bubbleSort (Cons(5, Cons(5, Cons(5, Empty))))
+
+                Expect.equal
+                    actualResult
+                    (Cons(5, Cons(5, Cons(5, Empty))))
+                    "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
 
             testCase "5 test for QuickSort ML"
             <| fun _ ->
-                let actualResult = MyListHW.bubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
-                Expect.equal actualResult (Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))) "The result should be Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))"
+                let actualResult =
+                    MyListHW.bubbleSort (Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
+
+                Expect.equal
+                    actualResult
+                    (Cons(-100, Cons(0, Cons(15, Cons(20, Empty)))))
+                    "The result should be Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))"
 
             testProperty "Checking the sorts 1 MyList"
-            <| fun (lst: MyList<int>) -> Expect.equal <| MyListHW.bubbleSort(lst) <| MyListHW.quickSort(lst) <| "The results should be the same"
+            <| fun (lst: MyList<int>) ->
+                Expect.equal
+                <| MyListHW.bubbleSort (lst)
+                <| MyListHW.quickSort (lst)
+                <| "The results should be the same"
 
             testProperty "Checking the sorts 2 MyList"
-            <| fun (lst: MyList<string>) -> Expect.equal <| MyListHW.bubbleSort(lst) <| MyListHW.quickSort(lst) <| "The results should be the same"
-           
+            <| fun (lst: MyList<string>) ->
+                Expect.equal
+                <| MyListHW.bubbleSort (lst)
+                <| MyListHW.quickSort (lst)
+                <| "The results should be the same"
+
         ]
 
 
@@ -178,8 +199,16 @@ module OOPList =
                     "The result should be MyListHW.Cons('a', MyListHW.Cons('b', MyListHW.Empty))"
 
             testProperty "Checking the sorts 1 OOPList"
-            <| fun (lst: list<int>) -> Expect.equal <| List.sort lst <| listToOOPList (bubbleSort (OOPListToList lst)) <| "The results should be the same"
+            <| fun (lst: list<int>) ->
+                Expect.equal
+                <| List.sort lst
+                <| listToOOPList (bubbleSort (OOPListToList lst))
+                <| "The results should be the same"
 
             testProperty "Checking the sorts 2 OOPList"
-            <| fun (lst: list<string>) -> Expect.equal <| List.sort lst <| listToOOPList (bubbleSort (OOPListToList lst)) <| "The results should be the same"
+            <| fun (lst: list<string>) ->
+                Expect.equal
+                <| List.sort lst
+                <| listToOOPList (bubbleSort (OOPListToList lst))
+                <| "The results should be the same"
         ]

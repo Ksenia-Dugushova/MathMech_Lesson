@@ -82,7 +82,11 @@ let rec separateList (lst: OOPList<'value>) a =
     | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>, EmptyList() :> OOPList<'value>
     | :? List<'value> as lst ->
         let sorted = separateList lst.Tail a
-        if lst.Head <= a then
+
+        if
+            lst.Head
+            <= a
+        then
             List(lst.Head, fst sorted), snd sorted
         else
             fst sorted, List(lst.Head, snd sorted)
@@ -98,7 +102,7 @@ let quickSort (lst: OOPList<'value>) =
                 List(lst.Head, EmptyList())
             else
                 let tailMinMax = separateList (List(head lst.Tail, tail lst.Tail)) lst.Head
-                сoncatenation (quick(fst tailMinMax)) (List(lst.Head, quick(snd tailMinMax)))
+                сoncatenation (quick (fst tailMinMax)) (List(lst.Head, quick (snd tailMinMax)))
         | _ -> failwith $"You can use EmptyList or list types"
 
     quick lst
@@ -111,7 +115,7 @@ let rec OOPListToList lst : OOPList<'value> =
 let rec listToOOPList (lst: OOPList<'value>) =
     match lst with
     | :? EmptyList<'value> -> []
-    | :? List<'value> as lst -> lst.Head :: listToOOPList lst.Tail
-    | _ ->
-        failwith
-            $"You can use EmptyList or list types"
+    | :? List<'value> as lst ->
+        lst.Head
+        :: listToOOPList lst.Tail
+    | _ -> failwith $"You can use EmptyList or list types"
