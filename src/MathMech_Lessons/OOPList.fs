@@ -77,11 +77,11 @@ let bubbleSort (lst: OOPList<'value>) =
     rez
 
 ///Функция получает OOPList и значение, возвращает кортеж с двумя списками
-let rec sortList (lst: OOPList<'value>) a =
+let rec separateList (lst: OOPList<'value>) a =
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>, EmptyList() :> OOPList<'value>
     | :? List<'value> as lst ->
-        let sorted = sortList lst.Tail a
+        let sorted = separateList lst.Tail a
         if lst.Head <= a then
             List(lst.Head, fst sorted), snd sorted
         else
@@ -97,8 +97,21 @@ let quickSort (lst: OOPList<'value>) =
             if lst.Tail :? EmptyList<'value> then
                 List(lst.Head, EmptyList())
             else
-                let tailMinMax = sortList (List(head lst.Tail, tail lst.Tail)) lst.Head
+                let tailMinMax = separateList (List(head lst.Tail, tail lst.Tail)) lst.Head
                 сoncatenation (quick(fst tailMinMax)) (List(lst.Head, quick(snd tailMinMax)))
         | _ -> failwith $"You can use EmptyList or list types"
 
     quick lst
+
+let rec OOPListToList lst : OOPList<'value> =
+    match lst with
+    | [] -> EmptyList() :> OOPList<'value>
+    | head :: tail -> List(head, OOPListToList tail)
+
+let rec listToOOPList (lst: OOPList<'value>) =
+    match lst with
+    | :? EmptyList<'value> -> []
+    | :? List<'value> as lst -> lst.Head :: listToOOPList lst.Tail
+    | _ ->
+        failwith
+            $"You can use EmptyList or list types"

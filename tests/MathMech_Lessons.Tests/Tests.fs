@@ -1,5 +1,6 @@
 namespace MathMech_lessons.Tests
 
+open FsCheck
 open Expecto
 
 module MyList =
@@ -59,11 +60,7 @@ module MyList =
             testCase "4 test for BubbleSort ML"
             <| fun _ ->
                 let actualResult = MyListHW.bubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
-
-                Expect.equal
-                    actualResult
-                    (Cons(5, Cons(5, Cons(5, Empty))))
-                    "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
+                Expect.equal actualResult (Cons(5, Cons(5, Cons(5, Empty)))) "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
 
             testCase "5 test for BubbleSort ML"
             <| fun _ ->
@@ -88,10 +85,29 @@ module MyList =
             <| fun _ ->
                 let actualResult = MyListHW.quickSort Empty
                 Expect.equal actualResult Empty "The result should be Empty"
+
+            testCase "4 test for QuickSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.bubbleSort(Cons(5, Cons(5, Cons(5, Empty))))
+                Expect.equal actualResult (Cons(5, Cons(5, Cons(5, Empty)))) "The result should be Cons(5, Cons(5, Cons(5, Empty )))"
+
+            testCase "5 test for QuickSort ML"
+            <| fun _ ->
+                let actualResult = MyListHW.bubbleSort(Cons(0, Cons(20, Cons(15, Cons(-100, Empty)))))
+                Expect.equal actualResult (Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))) "The result should be Cons(-100, Cons(0, Cons(15, Cons(20, Empty))))"
+
+            testProperty "Checking the sorts 1 MyList"
+            <| fun (lst: MyList<int>) -> Expect.equal <| MyListHW.bubbleSort(lst) <| MyListHW.quickSort(lst) <| "The results should be the same"
+
+            testProperty "Checking the sorts 2 MyList"
+            <| fun (lst: MyList<string>) -> Expect.equal <| MyListHW.bubbleSort(lst) <| MyListHW.quickSort(lst) <| "The results should be the same"
+           
         ]
+
 
 module OOPList =
     open OOPListHW
+    open MyList
     //open MyListHW
     [<Tests>]
     let tests =
@@ -160,4 +176,10 @@ module OOPList =
                     actualResult
                     (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty)))
                     "The result should be MyListHW.Cons('a', MyListHW.Cons('b', MyListHW.Empty))"
+
+            testProperty "Checking the sorts 1 OOPList"
+            <| fun (lst: list<int>) -> Expect.equal <| List.sort lst <| listToOOPList (bubbleSort (OOPListToList lst)) <| "The results should be the same"
+
+            testProperty "Checking the sorts 2 OOPList"
+            <| fun (lst: list<string>) -> Expect.equal <| List.sort lst <| listToOOPList (bubbleSort (OOPListToList lst)) <| "The results should be the same"
         ]
