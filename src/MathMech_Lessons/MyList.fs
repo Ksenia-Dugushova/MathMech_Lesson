@@ -53,6 +53,6 @@ let quickSort (lst: MyList<'value>) =
         | Cons (head, Empty) -> Cons(head, Empty)
         | Cons (head, tail) ->
             let part = separationList tail head
-            сoncatenation (quick(fst part)) (Cons(head, quick(snd part)))
+            сoncatenation (quick (fst part)) (Cons(head, quick (snd part)))
 
     quick lst
