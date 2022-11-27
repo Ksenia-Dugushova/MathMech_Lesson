@@ -1,4 +1,4 @@
-namespace MHomeworks.Tests
+namespace TreeHomeworks.Tests
 
 open FsCheck
 open Expecto
