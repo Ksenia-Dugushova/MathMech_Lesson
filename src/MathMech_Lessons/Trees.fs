@@ -7,14 +7,11 @@ type SomeTree<'value> =
     | Leaf of value: 'value
     | Node of parents: 'value * nodes: array<SomeTree<'value>>
 
-
-///Функция foldTree сворачивает деревья SomeTree
 let rec foldTree stacker acc tree =
     match tree with
     | Leaf value -> stacker acc value
     | Node (value, children) -> Array.fold (foldTree stacker) (stacker acc value) children
 
-///Функция возвращает количество уникальных элементов
 let uniqueElements tree =
     let hashSet = HashSet<'value>()
 
@@ -27,6 +24,6 @@ let uniqueElements tree =
     let res = foldTree hashSetTree hashSet tree
     res.Count
 
-let myList_tree tree =
+let myListTree tree =
     let treeToList list element = Cons(element, list)
     foldTree treeToList Empty tree

@@ -52,20 +52,20 @@ module MyList =
 
             testCase "MyList of tree with 1 node"
             <| fun _ ->
-                let actualResult = myList_tree (Leaf(5))
+                let actualResult = myListTree (Leaf(5))
                 Expect.equal actualResult (Cons(5, Empty)) "The result should be Cons(5, Empty)"
 
             testProperty "Length of MyList"
             <| fun (tree: SomeTree<int>) ->
                 Expect.isGreaterThan
-                <| lenght (myList_tree tree)
+                <| lenght (myListTree tree)
                 <| 0
                 <| "The length of MyList cannot be 0"
 
             testProperty "the length of MyList"
             <| fun (tree: SomeTree<int>) ->
                 Expect.isGreaterThanOrEqual
-                <| lenght (myList_tree tree)
+                <| lenght (myListTree tree)
                 <| uniqueElements tree
                 <| "the length of MyList cannot be less than the number of different elements"
         ]
