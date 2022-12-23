@@ -10,264 +10,164 @@ module SparseVectorTests =
 
     [<Tests>]
     let tests =
-        testList "samples" [
-            testCase "function square for one element 1"
-            <| fun _ ->
-                let actualResult = square [| Some(1) |]
-                Expect.equal actualResult 1 "The result should be 1"
+        testList
+            "samples"
+            [ testCase "function square for one element 1"
+              <| fun _ ->
+                  let actualResult = square [| Some(1) |]
+                  Expect.equal actualResult 1 "The result should be 1"
 
-            testCase "function square for one element 2"
-            <| fun _ ->
-                let actualResult =
-                    square [|
-                        Some(11)
-                        Some(5)
-                        Some(26)
-                        Some(2)
-                        Some(9)
-                        Some(33)
-                        Some(4)
-                        Some(17)
-                        Some(8)
-                    |]
+              testCase "function square for one element 2"
+              <| fun _ ->
+                  let actualResult =
+                      square [| Some(11); Some(5); Some(26); Some(2); Some(9); Some(33); Some(4); Some(17); Some(8) |]
 
-                Expect.equal actualResult 16 "The result should be 16"
+                  Expect.equal actualResult 16 "The result should be 16"
 
-            testCase "function square for empty array"
-            <| fun _ ->
-                let actualResult = square [||]
-                Expect.equal actualResult 0 "The result should be 0"
+              testCase "function square for empty array"
+              <| fun _ ->
+                  let actualResult = square [||]
+                  Expect.equal actualResult 0 "The result should be 0"
 
-            testProperty "function square property test"
-            <| fun (arr: array<Option<int>>) ->
-                Expect.isLessThanOrEqual
-                <| arr.Length
-                <| square arr
-                <| "Square expected less than or equal array length result"
+              testProperty "function square property test"
+              <| fun (arr: array<Option<int>>) ->
+                  Expect.isLessThanOrEqual
+                  <| arr.Length
+                  <| square arr
+                  <| "Square expected less than or equal array length result"
 
-            testCase "toBinaryTree for None array"
-            <| fun _ ->
-                let actualResult = toBinaryTree [| Option.None |]
-                Expect.equal actualResult BinaryTree.None "The result should be BinaryTree.None"
+              testCase "toBinaryTree for None array"
+              <| fun _ ->
+                  let actualResult = toBinaryTree [| Option.None |]
+                  Expect.equal actualResult BinaryTree.None "The result should be BinaryTree.None"
 
-            testCase "toBinaryTree for random array"
-            <| fun _ ->
-                let actualResult =
-                    toBinaryTree [|
-                        Some(1)
-                        Some(1)
-                        Option.None
-                        Option.None
-                    |]
+              testCase "toBinaryTree for random array"
+              <| fun _ ->
+                  let actualResult = toBinaryTree [| Some(1); Some(1); Option.None; Option.None |]
 
-                Expect.equal
-                    actualResult
-                    (Node(Node(Leaf(1), Leaf(1)), BinaryTree.None))
-                    "The result should be (Node(Node(Leaf(1), Leaf(1))"
+                  Expect.equal actualResult (Node(Node(Leaf(1), Leaf(1)), BinaryTree.None)) "The result should be (Node(Node(Leaf(1), Leaf(1))"
 
-            testCase "toBinaryTree for string array"
-            <| fun _ ->
-                let actualResult =
-                    toBinaryTree [|
-                        Some("a")
-                        Some("bb")
-                    |]
+              testCase "toBinaryTree for string array"
+              <| fun _ ->
+                  let actualResult = toBinaryTree [| Some("a"); Some("bb") |]
 
-                Expect.equal
-                    actualResult
-                    (Node(Leaf("a"), Leaf("bb")))
-                    "The result should be (Node(Leaf('a'), Leaf('bb')))"
+                  Expect.equal actualResult (Node(Leaf("a"), Leaf("bb"))) "The result should be (Node(Leaf('a'), Leaf('bb')))"
 
-            testCase "vectorElement for empty array"
-            <| fun _ ->
-                let actualResult =
-                    Expect.throws
-                        (fun _ ->
-                            SparseVector([||])[152]
-                            |> ignore
-                        )
-                        "Index out of the range"
+              testCase "vectorElement for empty array"
+              <| fun _ ->
+                  let actualResult =
+                      Expect.throws (fun _ -> SparseVector([||])[152] |> ignore) "Index out of the range"
 
-                actualResult
+                  actualResult
 
-            testProperty "vectorElement property test"
-            <| fun (arr: array<Option<int>>) (i: uint) ->
-                let arr' = Array.append arr [| Some(1) |]
-                let i' = int i % arr'.Length
+              testProperty "vectorElement property test"
+              <| fun (arr: array<int option>) (i: int) ->
+                  let actualResult = SparseVector arr
+                  let i = Random().Next(0, arr.Length)
 
-                Expect.equal
-                <| arr'[int i']
-                <| SparseVector(arr')[i']
-                <| "vectorElement expected same result as Array.get"
+                  if arr.Length = 0 then
+                      skiptest |> ignore
+                  else
+                      Expect.equal <| arr[i] <| actualResult[i] <| "vectorElement expected same result as Array.get"
 
-            testProperty "Operation property test"
-            <| fun (x: int) ->
-                let length1 =
-                    (abs x)
-                    + 1
+              testProperty "Operation property test"
+              <| fun (x: int) ->
+                  let length1 = (abs x) + 1
 
-                let rnd = System.Random()
-                let arr1 = Array.init length1 (fun _ -> rnd.Next(100))
+                  let rnd = System.Random()
+                  let arr1 = Array.init length1 (fun _ -> rnd.Next(100))
 
-                let arr1Some =
-                    arr1
-                    |> Array.map (fun middle -> if middle % 2 = 0 then Some middle else Option.None)
+                  let arr1Some =
+                      arr1 |> Array.map (fun middle -> if middle % 2 = 0 then Some middle else Option.None)
 
-                let arr2 = Array.init length1 (fun _ -> rnd.Next(100))
+                  let arr2 = Array.init length1 (fun _ -> rnd.Next(100))
 
-                let arr2Some =
-                    arr2
-                    |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
+                  let arr2Some =
+                      arr2 |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
 
-                let vector1 = SparseVector(arr1Some)
-                let vector2 = SparseVector(arr2Some)
+                  let vector1 = SparseVector(arr1Some)
+                  let vector2 = SparseVector(arr2Some)
 
-                let funPlus opt1 opt2 =
-                    match opt1, opt2 with
-                    | Option.Some a, Option.Some b -> Option.Some(a + b)
-                    | Option.Some a, Option.None
-                    | Option.None, Option.Some a -> Option.Some(a)
-                    | Option.None, Option.None -> Option.None
+                  let funPlus opt1 opt2 =
+                      match opt1, opt2 with
+                      | Option.Some a, Option.Some b -> Option.Some(a + b)
+                      | Option.Some a, Option.None
+                      | Option.None, Option.Some a -> Option.Some(a)
+                      | Option.None, Option.None -> Option.None
 
-                let naiveAddition (arr1: array<Option<int>>) (arr2: array<Option<int>>) =
+                  let naiveAddition (arr1: array<Option<int>>) (arr2: array<Option<int>>) =
 
-                    let length = arr1.Length
-                    let mutable res = Array.zeroCreate length
+                      let length = arr1.Length
+                      let mutable res = Array.zeroCreate length
 
-                    for i in 0 .. length - 1 do
-                        res[i] <- funPlus arr1[i] arr2[i]
+                      for i in 0 .. length - 1 do
+                          res[i] <- funPlus arr1[i] arr2[i]
 
-                    res
+                      res
 
-                let expectedResult = SparseVector(naiveAddition arr1Some arr2Some)
-                let actualResult = operation funPlus vector1 vector2
-                Expect.equal actualResult.Keeping expectedResult.Keeping "Undefined result. "
-        ]
+                  let expectedResult = SparseVector(naiveAddition arr1Some arr2Some)
+                  let actualResult = addVector funPlus vector1 vector2
+                  Expect.equal actualResult.Storage expectedResult.Storage "Undefined result. " ]
 
 module SparseMatrixTests =
     open SparseMatrix
 
     [<Tests>]
     let tests =
-        testList "samples" [
-            testCase "Square for array 2D 1"
-            <| fun _ ->
-                let actualResult =
-                    square (
-                        array2D [
-                            [
-                                Some(1)
-                                Some(2)
-                            ]
-                            [
-                                Some(3)
-                                Some(4)
-                            ]
-                        ]
-                    )
+        testList
+            "samples"
+            [ testCase "Square for array 2D 1"
+              <| fun _ ->
+                  let actualResult = square (array2D [ [ Some(1); Some(2) ]; [ Some(3); Some(4) ] ])
+                  Expect.equal actualResult 2 "The result should be 2"
 
-                Expect.equal actualResult 2 "The result should be 2"
+              testCase "Square for array 2D 2"
+              <| fun _ ->
+                  let actualResult =
+                      square (array2D [ [ Some(7); Some(22); Some(3) ]; [ Some(4); Some(51); Some(21) ]; [ Some(3); Some(34); Some(35) ] ])
 
-            testCase "Square for array 2D 2"
-            <| fun _ ->
-                let actualResult =
-                    square (
-                        array2D [
-                            [
-                                Some(7)
-                                Some(22)
-                                Some(3)
-                            ]
-                            [
-                                Some(4)
-                                Some(51)
-                                Some(21)
-                            ]
-                            [
-                                Some(3)
-                                Some(34)
-                                Some(35)
-                            ]
-                        ]
-                    )
+                  Expect.equal actualResult 4 "The result should be 4"
 
-                Expect.equal actualResult 4 "The result should be 4"
+              testCase "Square for array 2D with one element"
+              <| fun _ ->
+                  let actualResult = square (array2D [ [ Some(10) ] ])
+                  Expect.equal actualResult 1 "The result should be 1"
 
-            testCase "Square for array 2D with one element"
-            <| fun _ ->
-                let actualResult = square (array2D [ [ Some(10) ] ])
-                Expect.equal actualResult 1 "The result should be 1"
+              testCase "toQuadTree for empty array 2D"
+              <| fun _ ->
+                  let actualResult = toQuadTree (array2D [ [] ])
+                  Expect.equal actualResult QuadTree.None "The result should be QuadTree.None"
 
-            testCase "toQuadTree for empty array 2D"
-            <| fun _ ->
-                let actualResult = toQuadTree (array2D [ [] ])
-                Expect.equal actualResult QuadTree.None "The result should be QuadTree.None"
+              testCase "toQuadTree for array2D "
+              <| fun _ ->
+                  let tree =
+                      toQuadTree (array2D [ [ Some(1); Some(1) ]; [ Option.None; Option.None ]; [ Some(1); Some(1) ] ])
 
-            testCase "toQuadTree for array2D "
-            <| fun _ ->
-                let tree =
-                    toQuadTree (
-                        array2D [
-                            [
-                                Some(1)
-                                Some(1)
-                            ]
-                            [
-                                Option.None
-                                Option.None
-                            ]
-                            [
-                                Some(1)
-                                Some(1)
-                            ]
-                        ]
-                    )
+                  Expect.equal
+                      tree
+                      (Node(Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None, Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None))
+                      "toQuadTree expected : (Node(Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None, Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None))"
 
-                Expect.equal
-                    tree
-                    (Node(
-                        Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None),
-                        QuadTree.None,
-                        Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None),
-                        QuadTree.None
-                    ))
-                    "toQuadTree expected : (Node(Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None, Node(Leaf(1), Leaf(1), QuadTree.None, QuadTree.None), QuadTree.None))"
+              testProperty "toSquare property test array2D"
+              <| fun (arr: int option[,]) ->
+                  Expect.isLessThanOrEqual
+                  <| max (Array2D.length1 arr) (Array2D.length2 arr)
+                  <| square arr
+                  <| "square expected less than or equal array length result"
 
-            testProperty "toSquare property test array2D"
-            <| fun (arr: int option[,]) ->
-                Expect.isLessThanOrEqual
-                <| max (Array2D.length1 arr) (Array2D.length2 arr)
-                <| square arr
-                <| "square expected less than or equal array length result"
+              testProperty "Item from the cell of array2D is equal to item from the cell of SparseMatrix"
+              <| fun (arr: int option[,]) (i: uint) (j: uint) ->
+                  let actualResult = SparseMatrix arr
+                  let i = Random().Next(0, Array2D.length1 arr)
+                  let j = Random().Next(0, Array2D.length2 arr)
 
-            testProperty "elementOfMatrix property test"
-            <| fun (arr: int option[,]) (i: uint) (j: uint) ->
-                let arr' =
-                    if
-                        Array2D.length1 arr = 0
-                        || Array2D.length2 arr = 0
-                    then
-                        (array2D [
-                            [
-                                Some(1)
-                                Some(2)
-                            ]
-                            [
-                                Some(2)
-                                Some(2)
-                            ]
-                        ])
-                    else
-                        arr
-
-                let i' = int i % (Array2D.length1 arr')
-                let j' = int j % (Array2D.length2 arr')
-
-                Expect.equal
-                <| arr'[int i', int j']
-                <| SparseMatrix(arr')[i', j']
-                <| "Something went wrong"
-        ]
+                  if Array2D.length1 arr = 0 || Array2D.length2 arr = 0 then
+                      skiptest |> ignore
+                  else
+                      Expect.equal
+                      <| arr[i, j]
+                      <| actualResult[i, j]
+                      <| "Item from the cell of array2D should be equal to item from the cell of SparseMatrix" ]
 
 module MultiMatrixTests =
     open MultiplicationMatrix
@@ -289,150 +189,79 @@ module MultiMatrixTests =
 
     [<Tests>]
     let tests =
-        testList "samples" [
-            testCase "Multi vector and matrix"
-            <| fun _ ->
-                let vec =
-                    SparseVector(
-                        [|
-                            Some(0)
-                            Some(1)
-                        |]
-                    )
+        testList
+            "samples"
+            [ testCase "Multi vector and matrix"
+              <| fun _ ->
+                  let vec = SparseVector([| Some(0); Some(1) |])
+                  let mat = SparseMatrix(array2D [ [ Some(1); Some(1) ]; [ Some(1); Some(2) ] ])
+                  let res = multiplication funPlusInt funMultiInt vec mat
+                  Expect.equal res.Storage (BinaryTree.Node(BinaryTree.Leaf(1), BinaryTree.Leaf(2))) "The result should be (BinaryTree.Node(BinaryTree.Leaf(1), BinaryTree.Leaf(2)))"
+              testCase "Multi None vector and matrix"
+              <| fun _ ->
+                  let vec = SparseVector([| Some(1); Some(1); Some(1) |])
 
-                let mat =
-                    SparseMatrix(
-                        array2D [
-                            [
-                                Some(1)
-                                Some(1)
-                            ]
-                            [
-                                Some(1)
-                                Some(2)
-                            ]
-                        ]
-                    )
+                  let mat =
+                      SparseMatrix(array2D [ [ Option.None; Option.None; Option.None ]; [ Option.None; Option.None; Option.None ]; [ Option.None; Option.None; Option.None ] ])
 
-                let res = multiplication funPlusInt funMultiInt vec mat
+                  let res = multiplication funPlusInt funMultiInt vec mat
+                  Expect.equal res.Storage BinaryTree.None "The result should be BinaryTree.None"
+              testProperty "Property test for multiplication"
+              <| fun (x: int) (y: int) ->
+                  let length1 = (abs x) + 1
 
-                Expect.equal
-                    res.Keeping
-                    (BinaryTree.Node(BinaryTree.Leaf(1), BinaryTree.Leaf(2)))
-                    "The result should be (BinaryTree.Node(BinaryTree.Leaf(1), BinaryTree.Leaf(2)))"
+                  let length2 = (abs y) + 1
 
-            testCase "Multi None vector and matrix"
-            <| fun _ ->
-                let vec =
-                    SparseVector(
-                        [|
-                            Some(1)
-                            Some(1)
-                            Some(1)
-                        |]
-                    )
+                  let rnd = System.Random()
+                  let arr = Array.init length1 (fun _ -> rnd.Next(100))
 
-                let mat =
-                    SparseMatrix(
-                        array2D [
-                            [
-                                Option.None
-                                Option.None
-                                Option.None
-                            ]
-                            [
-                                Option.None
-                                Option.None
-                                Option.None
-                            ]
-                            [
-                                Option.None
-                                Option.None
-                                Option.None
-                            ]
-                        ]
-                    )
+                  let arrSome = arr |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
 
-                let res = multiplication funPlusInt funMultiInt vec mat
-                Expect.equal res.Keeping BinaryTree.None "The result should be BinaryTree.None"
+                  let arr2d = Array2D.init length1 length2 (fun _ _ -> rnd.Next(100))
 
-            testProperty "Property test for multiplication"
-            <| fun (x: int) (y: int) ->
-                let length1 =
-                    (abs x)
-                    + 1
+                  let arr2dSome =
+                      arr2d |> Array2D.map (fun n -> if n % 2 = 0 then Some n else Option.None)
 
-                let length2 =
-                    (abs y)
-                    + 1
+                  let vector = SparseVector(arrSome)
+                  let matrix = SparseMatrix(arr2dSome)
 
-                let rnd = System.Random()
-                let arr = Array.init length1 (fun _ -> rnd.Next(100))
+                  let naiveMulti (arr: int option[]) (arr2d: int option[,]) =
+                      let funPlus opt1 opt2 =
+                          match opt1, opt2 with
+                          | Option.Some a, Option.Some b -> Option.Some(a + b)
+                          | Option.Some a, Option.None
+                          | Option.None, Option.Some a -> Option.Some(a)
+                          | Option.None, Option.None -> Option.None
 
-                let arrSome =
-                    arr
-                    |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
+                      let funMulti opt1 opt2 =
+                          match opt1, opt2 with
+                          | Option.Some a, Option.Some b -> Option.Some(a * b)
+                          | _, Option.None
+                          | Option.None, _ -> Option.None
 
-                let arr2d = Array2D.init length1 length2 (fun _ _ -> rnd.Next(100))
+                      let rows = arr.Length
+                      let columns = Array2D.length2 arr2d
+                      let mutable res = Array.zeroCreate columns
 
-                let arr2dSome =
-                    arr2d
-                    |> Array2D.map (fun n -> if n % 2 = 0 then Some n else Option.None)
+                      for j in 0 .. columns - 1 do
+                          for i in 0 .. rows - 1 do
+                              res[j] <- funPlus res[j] (funMulti arr[i] arr2d[i, j])
 
-                let vector = SparseVector(arrSome)
-                let matrix = SparseMatrix(arr2dSome)
+                      res
 
-                let naiveMulti (arr: int option[]) (arr2d: int option[,]) =
-                    let funPlus opt1 opt2 =
-                        match opt1, opt2 with
-                        | Option.Some a, Option.Some b -> Option.Some(a + b)
-                        | Option.Some a, Option.None
-                        | Option.None, Option.Some a -> Option.Some(a)
-                        | Option.None, Option.None -> Option.None
+                  let rec isNoneReduce tree =
+                      match tree with
+                      | BinaryTree.Node (BinaryTree.None, BinaryTree.None) -> false
+                      | BinaryTree.Node (x, y) -> isNoneReduce x && isNoneReduce y
+                      | BinaryTree.Leaf _ -> true
+                      | BinaryTree.None -> true
 
-                    let funMulti opt1 opt2 =
-                        match opt1, opt2 with
-                        | Option.Some a, Option.Some b -> Option.Some(a * b)
-                        | _, Option.None
-                        | Option.None, _ -> Option.None
+                  let expectedResult = SparseVector(naiveMulti arrSome arr2dSome)
+                  let actualResult = multiplication funPlusInt funMultiInt vector matrix
+                  let actualResult' = isNoneReduce actualResult.Storage
 
-                    let rows = arr.Length
-                    let columns = Array2D.length2 arr2d
-                    let mutable res = Array.zeroCreate columns
+                  Expect.equal actualResult.Storage expectedResult.Storage $"Something went wrong"
 
-                    for j in
-                        0 .. columns
-                             - 1 do
-                        for i in 0 .. rows - 1 do
-                            res[j] <- funPlus res[j] (funMulti arr[i] arr2d[i, j])
+                  Expect.equal actualResult.Length matrix.RowCount "The actualResult.Length should be the same matrix.Length1. "
 
-                    res
-
-                let rec isNoneReduce tree =
-                    match tree with
-                    | BinaryTree.Node (BinaryTree.None, BinaryTree.None) -> false
-                    | BinaryTree.Node (x, y) ->
-                        isNoneReduce x
-                        && isNoneReduce y
-                    | BinaryTree.Leaf _ -> true
-                    | BinaryTree.None -> true
-
-                let expectedResult = SparseVector(naiveMulti arrSome arr2dSome)
-                let actualResult = multiplication funPlusInt funMultiInt vector matrix
-                let actualResult' = isNoneReduce actualResult.Keeping
-
-                Expect.equal
-                    actualResult.Keeping
-                    expectedResult.Keeping
-                    $"\n Array : %A{arrSome}\n
-                       \n Array2d : %A{arr2dSome}\n
-                       \n Array tree : %A{vector.Keeping}\n
-                       \n Matrix tree : %A{matrix.Keeping}\n. "
-
-                Expect.equal
-                    actualResult.Length
-                    matrix.LengthR
-                    "The actualResult.Length should be the same matrix.Length1. "
-
-                Expect.equal actualResult' true "Something went wrong"
-        ]
+                  Expect.equal actualResult' true "Something went wrong" ]

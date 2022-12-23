@@ -9,13 +9,10 @@ type Vector<'value> =
         val Lenght: int
 
         new(memory, head, length) =
-            {
-                Memory = memory
-                Head = head
-                Lenght = length
-            }
+            { Memory = memory
+              Head = head
+              Lenght = length }
     end
-
 
 type BinaryTree<'value> =
     | None
@@ -29,11 +26,7 @@ let square (arr: 'value option[]) =
     if (ceil logarithm) = logarithm then
         length
     else
-        int (
-            2.0
-            ** ceil logarithm
-        )
-
+        int (2.0 ** ceil logarithm)
 
 let toBinaryTree arr =
     let optionToBinaryTree optionValue =
@@ -47,30 +40,15 @@ let toBinaryTree arr =
         let memory = vec.Memory
         let realLength = memory.Length
 
-        if
-            head
-            >= realLength
-        then
+        if head >= realLength then
             BinaryTree.None
         elif length = 1 then
             optionToBinaryTree memory[head]
         else
             let left = binaryTreeMaking (Vector(memory, head, length / 2))
+            let right = binaryTreeMaking (Vector(memory, head + length / 2, length / 2))
 
-            let right =
-                binaryTreeMaking (
-                    Vector(
-                        memory,
-                        head
-                        + length / 2,
-                        length / 2
-                    )
-                )
-
-            if
-                left = BinaryTree.None
-                && right = BinaryTree.None
-            then
+            if left = BinaryTree.None && right = BinaryTree.None then
                 BinaryTree.None
             else
                 Node(left, right)
@@ -79,23 +57,19 @@ let toBinaryTree arr =
 
 type SparseVector<'value when 'value: equality> =
     struct
-        val Keeping: BinaryTree<'value>
+        val Storage: BinaryTree<'value>
         val Length: int
         val LengthSquare: int
 
-        new(keeping, length, lengthSquare) =
-            {
-                Keeping = keeping
-                Length = length
-                LengthSquare = lengthSquare
-            }
+        new(storage, length, lengthSquare) =
+            { Storage = storage
+              Length = length
+              LengthSquare = lengthSquare }
 
         new(arr: array<Option<'value>>) =
-            {
-                Keeping = toBinaryTree arr
-                Length = arr.Length
-                LengthSquare = square arr
-            }
+            { Storage = toBinaryTree arr
+              Length = arr.Length
+              LengthSquare = square arr }
 
         member this.Item
             with get i =
@@ -113,7 +87,7 @@ type SparseVector<'value when 'value: equality> =
                                 element (i - middle) middle right
 
                     if i < vector.Length then
-                        element i vector.LengthSquare vector.Keeping
+                        element i vector.LengthSquare vector.Storage
                     else
                         failwith "Index out of the range"
 
@@ -121,11 +95,7 @@ type SparseVector<'value when 'value: equality> =
     end
 
 
-let operation
-    (fPlus: 'value1 option -> 'value2 option -> 'value3 option)
-    (vector1: SparseVector<'value1>)
-    (vector2: SparseVector<'value2>)
-    : SparseVector<'value3> =
+let addVector (fPlus: 'value1 option -> 'value2 option -> 'value3 option) (vector1: SparseVector<'value1>) (vector2: SparseVector<'value2>) : SparseVector<'value3> =
     let f x y =
         let z = fPlus x y
 
@@ -140,45 +110,26 @@ let operation
             match x with
             | Leaf a -> f Option.None (Some a)
             | BinaryTree.None -> BinaryTree.None
-            | BinaryTree.Node (a, b) ->
-                operationTree
-                    (BinaryTree.Node(BinaryTree.None, BinaryTree.None))
-                    (BinaryTree.Node(a, b))
+            | BinaryTree.Node (a, b) -> operationTree (BinaryTree.Node(BinaryTree.None, BinaryTree.None)) (BinaryTree.Node(a, b))
 
         | x, BinaryTree.None ->
             match x with
             | Leaf a -> f (Some a) Option.None
             | BinaryTree.None -> BinaryTree.None
-            | BinaryTree.Node (a, b) ->
-                operationTree
-                    (BinaryTree.Node(a, b))
-                    (BinaryTree.Node(BinaryTree.None, BinaryTree.None))
+            | BinaryTree.Node (a, b) -> operationTree (BinaryTree.Node(a, b)) (BinaryTree.Node(BinaryTree.None, BinaryTree.None))
 
         | BinaryTree.Node (x, y), BinaryTree.Node (z, w) ->
             let left = operationTree x z
             let right = operationTree y w
 
-            if
-                left = BinaryTree.None
-                && right = BinaryTree.None
-            then
+            if left = BinaryTree.None && right = BinaryTree.None then
                 BinaryTree.None
             else
                 BinaryTree.Node(left, right)
-        | BinaryTree.Node (x, y), BinaryTree.Leaf z ->
-            operationTree
-            <| BinaryTree.Node(x, y)
-            <| BinaryTree.Node(BinaryTree.Leaf z, BinaryTree.Leaf z)
-        | BinaryTree.Leaf z, BinaryTree.Node (x, y) ->
-            operationTree
-            <| BinaryTree.Node(BinaryTree.Leaf z, BinaryTree.Leaf z)
-            <| BinaryTree.Node(x, y)
+        | BinaryTree.Node (x, y), BinaryTree.Leaf z -> operationTree <| BinaryTree.Node(x, y) <| BinaryTree.Node(BinaryTree.Leaf z, BinaryTree.Leaf z)
+        | BinaryTree.Leaf z, BinaryTree.Node (x, y) -> operationTree <| BinaryTree.Node(BinaryTree.Leaf z, BinaryTree.Leaf z) <| BinaryTree.Node(x, y)
 
     if vector1.Length = vector2.Length then
-        SparseVector(
-            operationTree vector1.Keeping vector2.Keeping,
-            vector1.Length,
-            vector1.LengthSquare
-        )
+        SparseVector(operationTree vector1.Storage vector2.Storage, vector1.Length, vector1.LengthSquare)
     else
         failwith "The lengths of the vectors are not equal"

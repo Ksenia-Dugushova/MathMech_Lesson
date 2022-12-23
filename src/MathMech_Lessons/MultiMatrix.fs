@@ -4,12 +4,7 @@ open SparseMatrix
 open SparseVector
 open System
 
-let multiplication
-    plus
-    (multiOperation: 'value1 option -> 'value2 option -> 'value3 option)
-    (vector: SparseVector<'value1>)
-    (matrix: SparseMatrix<'value2>)
-    : SparseVector<'value3> =
+let multiplication plus (multiOperation: option<'value1> -> option<'value2> -> option<'value3>) (vector: SparseVector<'value1>) (matrix: SparseMatrix<'value2>) : SparseVector<'value3> =
     let rec multiTree binaryTree quadTree =
         match binaryTree, quadTree with
         | BinaryTree.None, _
@@ -22,23 +17,20 @@ let multiplication
             | Option.None -> BinaryTree.None
         | BinaryTree.Node (left, right), QuadTree.Node (fst, snd, thd, fth) ->
             let fst =
-                (operation
+                (addVector
                  <| plus
                  <| SparseVector(multiTree left fst, vector.Length, vector.LengthSquare)
                  <| SparseVector(multiTree right thd, vector.Length, vector.LengthSquare))
-                    .Keeping
+                    .Storage
 
             let snd =
-                (operation
+                (addVector
                  <| plus
                  <| SparseVector(multiTree left snd, vector.Length, vector.LengthSquare)
                  <| SparseVector(multiTree right fth, vector.Length, vector.LengthSquare))
-                    .Keeping
+                    .Storage
 
-            if
-                fst = BinaryTree.None
-                && snd = BinaryTree.None
-            then
+            if fst = BinaryTree.None && snd = BinaryTree.None then
                 BinaryTree.None
             else
                 BinaryTree.Node(fst, snd)
@@ -49,60 +41,31 @@ let multiplication
         | BinaryTree.Node (left, right), QuadTree.Leaf value ->
             multiTree
             <| BinaryTree.Node(left, right)
-            <| QuadTree.Node(
-                QuadTree.Leaf value,
-                QuadTree.Leaf value,
-                QuadTree.Leaf value,
-                QuadTree.Leaf value
-            )
+            <| QuadTree.Node(QuadTree.Leaf value, QuadTree.Leaf value, QuadTree.Leaf value, QuadTree.Leaf value)
 
-    let rec splitBinaryTree (tree: BinaryTree<'value>) desiredSize splitSize =
+    let rec CutBinaryTree (tree: BinaryTree<'value>) desiredSize currentSize =
         match tree with
-        | BinaryTree.Node (fst, _) when
-            desiredSize
-            <> splitSize
-            ->
-            splitBinaryTree
-                fst
-                desiredSize
-                (splitSize
-                 / 2)
+        | BinaryTree.Node (fst, _) when desiredSize <> currentSize -> CutBinaryTree fst desiredSize (currentSize / 2)
         | _ -> tree
 
-    let rec makingBinareTree (tree: BinaryTree<'vslue>) desiredSize splitSize =
-        if
-            desiredSize
-            <> splitSize
-        then
-            makingBinareTree
-                (BinaryTree.Node(tree, BinaryTree.None))
-                desiredSize
-                (splitSize
-                 * 2)
+    let rec binareTreeMaker (tree: BinaryTree<'value>) desiredSize currentSize =
+        if desiredSize <> currentSize then
+            binareTreeMaker (BinaryTree.Node(tree, BinaryTree.None)) desiredSize (currentSize * 2)
         else
             tree
 
-    if vector.Length = matrix.LengthR then
+    if vector.Length = matrix.RowCount then
         let makeTree =
-            if
-                vector.LengthSquare
-                <> matrix.LengthSquare
-            then
-                multiTree
-                    (makingBinareTree vector.Keeping matrix.LengthSquare vector.LengthSquare)
-                    matrix.Keeping
+            if vector.LengthSquare <> matrix.LengthSquare then
+                multiTree (binareTreeMaker vector.Storage matrix.LengthSquare vector.LengthSquare) matrix.Storage
             else
-                multiTree vector.Keeping matrix.Keeping
+                multiTree vector.Storage matrix.Storage
 
         let splitTree =
-            if matrix.LengthR > matrix.LengthC then
-                let desiredSize =
-                    int (
-                        2.0
-                        ** ceil (Math.Log(matrix.LengthC, 2))
-                    )
+            if matrix.RowCount > matrix.ColumnCount then
+                let desiredSize = int (2.0 ** ceil (Math.Log(matrix.ColumnCount, 2)))
 
-                splitBinaryTree makeTree desiredSize matrix.LengthSquare
+                CutBinaryTree makeTree desiredSize matrix.LengthSquare
             else
                 makeTree
 
