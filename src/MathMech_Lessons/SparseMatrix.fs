@@ -21,7 +21,7 @@ let square arr =
 
 type SquareArray<'value> =
     struct
-        val Memory: 'value option[,]
+        val Memory: option<'value>[,]
         val HeadOfRow: int
         val HeadOfColumn: int
         val Length: int
@@ -76,19 +76,16 @@ type SparseMatrix<'value when 'value: equality> =
         val Storage: QuadTree<'value>
         val RowCount: int
         val ColumnCount: int
-        val LengthSquare: int
 
-        new(storage, rowCount, columnCount, lengthSquare) =
+        new(storage, rowCount, columnCount) =
             { Storage = storage
               RowCount = rowCount
-              ColumnCount = columnCount
-              LengthSquare = lengthSquare }
+              ColumnCount = columnCount }
 
-        new(arr: 'value option[,]) =
+        new(arr: option<'value>[,]) =
             { Storage = toQuadTree arr
               RowCount = Array2D.length1 arr
-              ColumnCount = Array2D.length2 arr
-              LengthSquare = square arr }
+              ColumnCount = Array2D.length2 arr }
 
         member this.Item
             with get (a, b) =
@@ -110,7 +107,8 @@ type SparseMatrix<'value when 'value: equality> =
                                 element (a - middle) (b - middle) middle w
 
                     if a < matrix.RowCount && b < matrix.ColumnCount then
-                        element a b matrix.LengthSquare matrix.Storage
+                        let powerSize = ceilPowTwo (max matrix.RowCount matrix.ColumnCount)
+                        element a b powerSize matrix.Storage
                     else
                         failwith "Index out of the range"
 

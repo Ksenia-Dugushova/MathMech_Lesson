@@ -68,46 +68,9 @@ module SparseVectorTests =
                   if arr.Length = 0 then
                       skiptest |> ignore
                   else
-                      Expect.equal <| arr[i] <| actualResult[i] <| "vectorElement expected same result as Array.get"
+                      Expect.equal <| arr[i] <| actualResult[i] <| "vectorElement expected same result as Array.get" ]
 
-              testProperty "Operation property test"
-              <| fun (x: int) ->
-                  let length1 = (abs x) + 1
 
-                  let rnd = System.Random()
-                  let arr1 = Array.init length1 (fun _ -> rnd.Next(100))
-
-                  let arr1Some =
-                      arr1 |> Array.map (fun middle -> if middle % 2 = 0 then Some middle else Option.None)
-
-                  let arr2 = Array.init length1 (fun _ -> rnd.Next(100))
-
-                  let arr2Some =
-                      arr2 |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
-
-                  let vector1 = SparseVector(arr1Some)
-                  let vector2 = SparseVector(arr2Some)
-
-                  let funPlus opt1 opt2 =
-                      match opt1, opt2 with
-                      | Option.Some a, Option.Some b -> Option.Some(a + b)
-                      | Option.Some a, Option.None
-                      | Option.None, Option.Some a -> Option.Some(a)
-                      | Option.None, Option.None -> Option.None
-
-                  let naiveAddition (arr1: array<Option<int>>) (arr2: array<Option<int>>) =
-
-                      let length = arr1.Length
-                      let mutable res = Array.zeroCreate length
-
-                      for i in 0 .. length - 1 do
-                          res[i] <- funPlus arr1[i] arr2[i]
-
-                      res
-
-                  let expectedResult = SparseVector(naiveAddition arr1Some arr2Some)
-                  let actualResult = addVector funPlus vector1 vector2
-                  Expect.equal actualResult.Storage expectedResult.Storage "Undefined result. " ]
 
 module SparseMatrixTests =
     open SparseMatrix
@@ -176,14 +139,14 @@ module MultiMatrixTests =
 
     let funPlusInt a b =
         match a, b with
-        | Some x, Some y -> Some(x + y)
-        | Option.None, Some x
+        | Some x, Some y -> if x + y <> 0 then Some(x + y) else Option.None
+        | Option.None, Some y -> Some y
         | Some x, Option.None -> Some x
         | Option.None, Option.None -> Option.None
 
     let funMultiInt a b =
         match a, b with
-        | Some x, Some y -> Some(x * y)
+        | Some x, Some y -> if x * y <> 0 then Some(x * y) else Option.None
         | Option.None, _
         | _, Option.None -> Option.None
 
@@ -206,62 +169,101 @@ module MultiMatrixTests =
 
                   let res = multiplication funPlusInt funMultiInt vec mat
                   Expect.equal res.Storage BinaryTree.None "The result should be BinaryTree.None"
-              testProperty "Property test for multiplication"
+
+              testProperty "Multiplication property test"
               <| fun (x: int) (y: int) ->
-                  let length1 = (abs x) + 1
+                  if x <> 0 && y <> 0 then
+                      let length = abs x
+                      let columns = abs y
+                      let rows = length
 
-                  let length2 = (abs y) + 1
+                      let rnd = System.Random()
+                      let valueToZero x = if x % 2 = 1 then x else 0
 
-                  let rnd = System.Random()
-                  let arr = Array.init length1 (fun _ -> rnd.Next(100))
+                      let randomVector length =
+                          Array.init length (fun _ -> rnd.Next(1, 10))
 
-                  let arrSome = arr |> Array.map (fun n -> if n % 2 = 0 then Some n else Option.None)
+                      let random2d rows columns =
+                          Array2D.init rows columns (fun _ _ -> rnd.Next(1, 10))
 
-                  let arr2d = Array2D.init length1 length2 (fun _ _ -> rnd.Next(100))
+                      let zeroToSomeNone x = if x <> 0 then Some x else Option.None
 
-                  let arr2dSome =
-                      arr2d |> Array2D.map (fun n -> if n % 2 = 0 then Some n else Option.None)
+                      let arr = randomVector length |> Array.map valueToZero
+                      let arrSome = Array.map zeroToSomeNone arr
 
-                  let vector = SparseVector(arrSome)
-                  let matrix = SparseMatrix(arr2dSome)
+                      let arr2d = random2d rows columns |> Array2D.map valueToZero
+                      let arr2dSome = arr2d |> Array2D.map zeroToSomeNone
 
-                  let naiveMulti (arr: int option[]) (arr2d: int option[,]) =
-                      let funPlus opt1 opt2 =
-                          match opt1, opt2 with
-                          | Option.Some a, Option.Some b -> Option.Some(a + b)
-                          | Option.Some a, Option.None
-                          | Option.None, Option.Some a -> Option.Some(a)
-                          | Option.None, Option.None -> Option.None
+                      let vec = SparseVector arrSome
+                      let mtx = SparseMatrix arr2dSome
 
-                      let funMulti opt1 opt2 =
-                          match opt1, opt2 with
-                          | Option.Some a, Option.Some b -> Option.Some(a * b)
-                          | _, Option.None
-                          | Option.None, _ -> Option.None
+                      let naiveMulti (arr: array<int>) (arr2d: int[,]) =
+                          let rows = arr.Length
+                          let columns = Array2D.length2 arr2d
+                          let mutable res = Array.zeroCreate columns
 
-                      let rows = arr.Length
-                      let columns = Array2D.length2 arr2d
-                      let mutable res = Array.zeroCreate columns
+                          for j = 0 to columns - 1 do
+                              for i = 0 to rows - 1 do
+                                  res[j] <- res[j] + arr[i] * arr2d[i, j]
 
-                      for j in 0 .. columns - 1 do
-                          for i in 0 .. rows - 1 do
-                              res[j] <- funPlus res[j] (funMulti arr[i] arr2d[i, j])
+                          res
 
-                      res
+                      let expectedResult =
+                          naiveMulti arr arr2d |> Array.map zeroToSomeNone |> SparseVector
 
-                  let rec isNoneReduce tree =
-                      match tree with
-                      | BinaryTree.Node (BinaryTree.None, BinaryTree.None) -> false
-                      | BinaryTree.Node (x, y) -> isNoneReduce x && isNoneReduce y
-                      | BinaryTree.Leaf _ -> true
-                      | BinaryTree.None -> true
+                      let actualResult = multiplication funPlusInt funMultiInt vec mtx
 
-                  let expectedResult = SparseVector(naiveMulti arrSome arr2dSome)
-                  let actualResult = multiplication funPlusInt funMultiInt vector matrix
-                  let actualResult' = isNoneReduce actualResult.Storage
+                      Expect.equal actualResult.Storage expectedResult.Storage $"Something went wrong"
+                      Expect.equal actualResult.Length mtx.RowCount "Expected actualResult.Length = matrix.RowCount" ]
 
-                  Expect.equal actualResult.Storage expectedResult.Storage $"Something went wrong"
+module PropertyTests =
+    open SparseVector
+    open SparseMatrix
+    open MultiplicationMatrix
 
-                  Expect.equal actualResult.Length matrix.RowCount "The actualResult.Length should be the same matrix.Length1. "
+    let rnd = System.Random()
 
-                  Expect.equal actualResult' true "Something went wrong" ]
+    let vectorsMaker (length: int) =
+        let arr = Array.init (abs length) (fun _ -> rnd.Next(1, 10))
+        let arrOfSome = arr |> Array.map (fun x -> if x > 2 then Option.None else Some(x))
+        SparseVector arrOfSome, arrOfSome
+
+    let rec BinaryTreeControl tree =
+        match tree with
+        | BinaryTree.Node (BinaryTree.None, BinaryTree.None) -> false
+        | BinaryTree.Node (left, right) -> BinaryTreeControl left && BinaryTreeControl right
+        | _ -> true
+
+    let matrixMaker (length: int) =
+        let arr2D = Array2D.init (abs length) (abs length) (fun _ _ -> rnd.Next(1, 10))
+
+        let arrOfSome2D =
+            arr2D |> Array2D.map (fun x -> if x > 2 then Option.None else Some(x))
+
+        SparseMatrix arrOfSome2D, arrOfSome2D
+
+    [<Tests>]
+    let tests =
+        testList
+            "samples"
+            [ testProperty "Sum vectors"
+              <| fun (length: int) ->
+                  let vec1, arrOfSome1 = vectorsMaker (abs length)
+                  let vec2, arrOfSome2 = vectorsMaker (abs length)
+                  let Result = addVector MultiMatrixTests.funPlusInt vec1 vec2
+
+                  let NaiveSum (arr1: array<int option>) (arr2: array<int option>) =
+                      let arrOfSum = Array.zeroCreate arr1.Length
+
+                      for i in 0 .. (abs length) - 1 do
+                          arrOfSum[i] <- MultiMatrixTests.funPlusInt arr1[i] arr2[i]
+
+                      arrOfSum
+
+                  Expect.equal Result.Storage
+                  <| SparseVector(NaiveSum arrOfSome1 arrOfSome2).Storage
+                  <| "Results of FAddTree with two vectors should be the same with naive sum"
+
+                  Expect.equal <| BinaryTreeControl Result.Storage <| true <| "Something went wrong"
+
+              ]
