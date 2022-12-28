@@ -252,16 +252,14 @@ module PropertyTests =
                   let vec2, arrOfSome2 = vectorsMaker (abs length)
                   let Result = addVector MultiMatrixTests.funPlusInt vec1 vec2
 
-                  let NaiveSum (arr1: array<int option>) (arr2: array<int option>) =
-                      let arrOfSum = Array.zeroCreate arr1.Length
 
-                      for i in 0 .. (abs length) - 1 do
-                          arrOfSum[i] <- MultiMatrixTests.funPlusInt arr1[i] arr2[i]
+                  let naiveSum (arr1: array<int option>) (arr2: array<int option>) =
+                      (arr1, arr2) ||> Array.map2 (fun x y -> MultiMatrixTests.funPlusInt x y)
 
-                      arrOfSum
+                  naiveSum
 
                   Expect.equal Result.Storage
-                  <| SparseVector(NaiveSum arrOfSome1 arrOfSome2).Storage
+                  <| SparseVector(naiveSum arrOfSome1 arrOfSome2).Storage
                   <| "Results of FAddTree with two vectors should be the same with naive sum"
 
                   Expect.equal <| BinaryTreeControl Result.Storage <| true <| "Something went wrong"
