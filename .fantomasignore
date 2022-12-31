@@ -1,0 +1,6 @@
+src/MathMech_Lessons/AssemblyInfo.fs
+src/MathMech_Lessons/MyList.fs
+src/MathMech_Lessons/OOPList.fs
+src/MathMech_Lessons/Trees.fs
+tests/MathMech_Lessons.Tests/TreeTest.fs
+tests/MathMech_Lessons.Tests/AssemblyInfo.fs
