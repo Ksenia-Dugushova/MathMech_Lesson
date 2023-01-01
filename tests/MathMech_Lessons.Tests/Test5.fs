@@ -5,8 +5,8 @@ open System.Collections.Generic
 open Expecto
 open Microsoft.FSharp.Core
 open Microsoft.FSharp.Collections
-open SparseMatrixBFS
-open SparseVectorBFS
+open SparseMatrix
+open SparseVector
 open BFS
 
 module SayTests =
@@ -24,8 +24,8 @@ module SayTests =
 
         [ testCase "Matrix from empty list"
           <| fun _ ->
-              let Result = toQTree [] 0 0
-              Expect.equal <| Result <| QuadTree.None <| "Matrix from empty list should be 'QuadTree.None'"
+              let actualResult = toQTree [] 0 0
+              Expect.equal <| actualResult <| QuadTree.None <| "Matrix from empty list should be 'QuadTree.None'"
 
           testProperty "toQTree"
           <| fun (tList: list<uint * uint>) ->
@@ -53,9 +53,9 @@ module SayTests =
                   [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
               let matrix = SparseMatrix(list, 4, 4)
-              let Result = BFS matrix [ 0u; 1u; 2u; 3u ]
+              let actualResult = BFS matrix [ 0u; 1u; 2u; 3u ]
 
-              Expect.equal Result.Storage
+              Expect.equal actualResult.Storage
               <| Node(Node(Leaf 0u, Leaf 0u), Node(Leaf 0u, Leaf 0u))
               <| "BFS should return 'Node(Node(Leaf 0, Leaf 0),Node(Leaf 0, Leaf 0))' from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0, 1, 2, 3]"
 
@@ -65,9 +65,9 @@ module SayTests =
                   [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
               let matrix = SparseMatrix(list, 4, 4)
-              let Result = BFS matrix [ 0u ]
+              let actualResult = BFS matrix [ 0u ]
 
-              Expect.equal Result.Storage
+              Expect.equal actualResult.Storage
               <| Node(Node(Leaf 0u, Leaf 1u), Node(None, Leaf 2u))
               <| "BFS should return 'Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))' from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]"
 
@@ -75,9 +75,9 @@ module SayTests =
           <| fun _ ->
               let list = []
               let matrix = SparseMatrix(list, 0, 0)
-              let Result = BFS matrix []
+              let actualResult = BFS matrix []
 
-              Expect.equal Result.Storage <| None <| "BFS should return 'None'"
+              Expect.equal actualResult.Storage <| None <| "BFS should return 'None'"
 
           testProperty "BFS against naive bfs"
           <| fun (list: List<uint * uint>) ->
@@ -99,7 +99,7 @@ module SayTests =
 
               let matrix = SparseMatrix(resultList, float size, float size)
 
-              let Result1 =
+              let result1 =
                   BFS
                       matrix
                       (if resultList.Length <> 0 then
@@ -127,20 +127,20 @@ module SayTests =
 
                   arr[fst iCoord, snd iCoord] <- third i
 
-              let NaiveBFS start (arr: 'a option[,]) =
+              let naiveBFS start (arr: 'a option[,]) =
                   let queue = Queue<uint * uint>()
 
                   for i in start do
                       queue.Enqueue(i, 0u)
 
-                  let rec Helper result visited =
+                  let rec helper result visited =
                       if queue.Count = 0 then
                           result
                       else
                           let x = queue.Dequeue()
 
                           if Set.contains (fst x) visited then
-                              Helper result visited
+                              helper result visited
                           else
                               let iApex =
                                   try
@@ -156,15 +156,15 @@ module SayTests =
                                   else
                                       queue.Enqueue(uint i, snd x + 1u)
 
-                              Helper (result @ [ x ]) (visited.Add(fst x))
+                              helper (result @ [ x ]) (visited.Add(fst x))
 
-                  if queue.Count = 0 then [] else Helper [] Set.empty
+                  if queue.Count = 0 then [] else helper [] Set.empty
 
-              let list = NaiveBFS start arr
+              let list = naiveBFS start arr
               let answers = Array.create (int size) Option.None
 
               for i in 0 .. list.Length - 1 do
                   answers[int (fst list[i])] <- Some(snd list[i])
 
-              let Result2 = SparseVectorBFS(answers)
-              Expect.equal <| Result1.Storage <| Result2.Storage <| "Something went wrong" ]
+              let result2 = SparseVector(answers)
+              Expect.equal <| result1.Storage <| result2.Storage <| "Something went wrong" ]
