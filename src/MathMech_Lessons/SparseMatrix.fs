@@ -30,7 +30,7 @@ let toSquareValue length1 length2 =
 
 type SquareArray<'value> =
     struct
-        val Memory: 'value option[,]
+        val Memory: option<'value>[,]
         val HeadOfRow: uint
         val HeadOfColumn: uint
         val Length: uint
@@ -136,7 +136,7 @@ type SparseMatrix<'value when 'value: equality> =
         val RowCount: uint
         val ColumnCount: uint
 
-        new(arr: 'value option[,]) =
+        new(arr: option<'value>[,]) =
             { Storage = toQuadTree arr
               RowCount = Array2D.length1 arr |> uint
               ColumnCount = Array2D.length2 arr |> uint }

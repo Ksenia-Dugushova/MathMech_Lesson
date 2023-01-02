@@ -20,7 +20,7 @@ type BinaryTree<'value> =
     | Leaf of 'value
     | Node of BinaryTree<'value> * BinaryTree<'value>
 
-let square (arr: 'value option[]) =
+let square (arr: option<'value>[]) =
     let length = arr.Length
     let logarithm = Math.Log(length, 2)
 
