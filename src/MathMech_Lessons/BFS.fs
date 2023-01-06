@@ -12,36 +12,33 @@ let mult x y =
 
 let add x y =
     match x, y with
-    | Some value, _ -> Some value
-    | _, Some value -> Some value
-    | _ -> Option.None
+    | Option.None, Option.None -> Option.None
+    | _ -> Some()
 
 let mask x y =
     match x, y with
-    | Option.None, _ -> Option.None
-    | Some value, Option.None -> Some value
-    | Some _, _ -> Option.None
+    | Some _, Option.None -> Some()
+    | _ -> Option.None
 
 let plusVisited iter x y =
     match x, y with
     | Option.None, Option.None -> Option.None
     | Option.None, Some value -> Some value
     | Some _, Option.None -> Some iter
-    | _ -> failwith $"Something wrong with SuperSum"
+    | _ -> failwith $"Something went wrong"
 
-let BFS (graph: SparseMatrix<'value>) (apexes: list<uint>) =
-    let apexes = List.map (fun x -> (x, ())) apexes
-    let front = SparseVector(apexes, graph.ColumnCount)
+let BFS (gMtx: SparseMatrix<'value>) (startV: list<uint>) =
+    let apexes = List.map (fun x -> (x, ())) startV
+    let front = SparseVector(apexes, gMtx.ColumnCount)
 
     let visited =
-        addVector (plusVisited 0u) front (SparseVector(BinaryTree.None, graph.ColumnCount))
+        addVector (plusVisited 0u) front (SparseVector(BinaryTree.None, gMtx.ColumnCount))
 
     let rec inner (front: SparseVector<'a>) visited iter =
         if front.isEmpty then
             visited
         else
-            let newFront = addVector mask (multiplication add mult front graph) visited
-
+            let newFront = addVector mask (multiplication add mult front gMtx) visited
             let visited = addVector (plusVisited iter) newFront visited
             inner newFront visited (iter + 1u)
 

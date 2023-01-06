@@ -1,4 +1,4 @@
-module Test5
+module TestBFSparent
 
 open System
 open System.Collections.Generic
@@ -7,9 +7,9 @@ open Microsoft.FSharp.Core
 open Microsoft.FSharp.Collections
 open SparseMatrix
 open SparseVector
-open BFS
+open BFSparent
 
-module Bfstest =
+module SayTests =
     let toInt (unsignedInt: uint) =
         try
             Convert.ToInt32(unsignedInt)
@@ -22,64 +22,52 @@ module Bfstest =
     let tests =
         testList
             "samples"
-            [ testCase "Matrix from empty list"
-              <| fun _ ->
-                  let actualResult = toQTree [] 0 0
-                  Expect.equal <| actualResult <| QuadTree.None <| "Matrix from empty list should be 'QuadTree.None'"
-
-              testProperty "toQTree"
-              <| fun (tList: list<uint * uint>) ->
-                  let tripleList =
-                      List.append tList [ (0u, 0u) ] |> List.distinct |> List.map (fun (x, y) -> (x, y, Some 100))
-
-                  let triple = List.maxBy (fun z -> first z + second z) tripleList
-                  let length = first triple + second triple + 1u
-
-                  let naiveFormation list length =
-                      let new2DArray = Array2D.create (toInt length) (toInt length) Option.None
-
-                      for i in 0 .. List.length list - 1 do
-                          new2DArray[first list[i] |> toInt, second list[i] |> toInt] <- third list[i]
-
-                      new2DArray
-
-                  let actualResult = toQTree tripleList (float length) (float length)
-                  let expectedResult = naiveFormation tripleList length |> toQuadTree
-                  Expect.equal actualResult expectedResult $"Something went wrong"
-
-              testCase "BFS with some graph and apexes 1"
+            [ testCase "pBFS with some graph and apexes 1"
               <| fun _ ->
                   let list =
                       [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
                   let matrix = SparseMatrix(list, 4, 4)
-                  let actualResult = BFS matrix [ 0u; 1u; 2u; 3u ]
+                  let actualResult = parentBFS matrix [ 0u; 1u; 2u; 3u ]
 
                   Expect.equal actualResult.Storage
-                  <| Node(Node(Leaf 0u, Leaf 0u), Node(Leaf 0u, Leaf 0u))
-                  <| "BFS should return 'Node(Node(Leaf 0, Leaf 0),Node(Leaf 0, Leaf 0))' from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0, 1, 2, 3]"
+                  <| Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u))
+                  <| "pBFS should return 'Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u))'"
 
-              testCase "BFS with some graph and apexes 2"
+              testCase "pBFS with some graph and apexes 2"
               <| fun _ ->
                   let list =
                       [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
                   let matrix = SparseMatrix(list, 4, 4)
-                  let actualResult = BFS matrix [ 0u ]
+                  let actualResult = parentBFS matrix [ 0u ]
 
                   Expect.equal actualResult.Storage
-                  <| Node(Node(Leaf 0u, Leaf 1u), Node(None, Leaf 2u))
-                  <| "BFS should return 'Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))' from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]"
+                  <| Node(Node(Leaf 0u, Leaf 0u), Node(None, Leaf 1u))
+                  <| "pBFS should return 'Node(Node(Leaf 0u, Leaf 0u), Node(None, Leaf 1u))' "
 
-              testCase "BFS with graph and apexes 3"
+              testCase "pBFS with some graph and apexes 3"
+              <| fun _ ->
+                  let list =
+                      [ (0u, 4u, Some 7); (1u, 5u, Some 7); (2u, 6u, Some 7); (3u, 7u, Some 7) ]
+
+                  let matrix = SparseMatrix(list, 8, 8)
+                  let actualResult = parentBFS matrix [ 0u; 1u; 2u; 3u ]
+
+                  Expect.equal actualResult.Storage
+                  <| Node(Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)), Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)))
+                  <| "pBFS should return 'Node(Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)), None)' "
+
+              testCase "pBFS with graph and apexes 3"
               <| fun _ ->
                   let list = []
                   let matrix = SparseMatrix(list, 0, 0)
-                  let actualResult = BFS matrix []
+                  let actualResult = parentBFS matrix []
 
-                  Expect.equal actualResult.Storage <| None <| "BFS should return 'None'"
+                  Expect.equal actualResult.Storage <| None <| "pBFS should return 'None'"
 
-              testProperty "naive bfs"
+
+              testProperty "naive parent bfs"
               <| fun (list: List<uint * uint>) ->
                   let size =
                       if list.IsEmpty then
@@ -100,7 +88,7 @@ module Bfstest =
                   let matrix = SparseMatrix(resultList, float size, float size)
 
                   let result1 =
-                      BFS
+                      parentBFS
                           matrix
                           (if resultList.Length <> 0 then
                                [ first resultList.Head ]
@@ -127,11 +115,12 @@ module Bfstest =
 
                       arr[fst iCoord, snd iCoord] <- third i
 
-                  let naiveBFS start (arr: 'a option[,]) =
+
+                  let naiveParentBFS start (arr: 'a option[,]) =
                       let queue = Queue<uint * uint>()
 
                       for i in start do
-                          queue.Enqueue(i, 0u)
+                          queue.Enqueue(i, i)
 
                       let rec helper result visited =
                           if queue.Count = 0 then
@@ -152,13 +141,13 @@ module Bfstest =
                                       let value = arr[iApex, i]
 
                                       if value <> Option.None then
-                                          queue.Enqueue(uint i, snd x + 1u)
+                                          queue.Enqueue(uint i, fst x)
 
                                   helper (x :: result) (visited.Add(fst x))
 
                       helper [] Set.empty
 
-                  let list = naiveBFS start arr
+                  let list = naiveParentBFS start arr
                   let answers = Array.create (int size) Option.None
 
                   for i in 0 .. list.Length - 1 do
