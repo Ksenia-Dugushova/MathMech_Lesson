@@ -1,16 +1,9 @@
 module BFSparent
 
-open SparseVector
 open SparseMatrix
+open SparseVector
 open MultiMatrix
-open FSharp.Collections
 open System
-
-
-let mult x y =
-    match x, y with
-    | Some value, Some _ -> Some value
-    | _ -> Option.None
 
 let add x y =
     match x, y with
@@ -18,11 +11,6 @@ let add x y =
     | Option.None, Some value
     | Some value, Option.None -> Some value
     | Some value1, Some value2 -> Some(min value1 value2)
-
-let mask x y =
-    match x, y with
-    | Some value, Option.None -> Some value
-    | _ -> Option.None
 
 let plusVisited x y =
     match x, y with
@@ -46,13 +34,11 @@ let parentBFS (gMtx: SparseMatrix<'value>) (startV: list<uint>) =
     let arr = Array.init (Convert.ToInt32 front.Length) (fun i -> Some(uint i))
     let indexOfVector = SparseVector(arr)
 
-    //let visited = (SparseVector(BinaryTree.None, gMtx.ColumnCount))
-
     let rec inner (front: SparseVector<uint>) visited =
         if front.isEmpty then
             visited
         else
-            let newFront = addVector mask (multiplication add mult front gMtx) visited
+            let newFront = addVector BFS.mask (multiplication add BFS.mult front gMtx) visited
             let visited = addVector plusVisited newFront visited
             inner (addVector parentUpdate newFront indexOfVector) visited
 
