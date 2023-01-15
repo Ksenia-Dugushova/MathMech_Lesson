@@ -32,7 +32,7 @@ let tests =
 
               Expect.equal actualResult.Storage
               <| toBinaryTree [| Some 0u; Some 1u; Some 2u; Some 3u |]
-              <| "pBFS should return 'Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u))'"
+              <| "pBFS should return [|Some 0u; Some 1u; Some 2u; Some 3u|]"
 
           testCase "pBFS with some graph and apexes 2"
           <| fun _ ->
@@ -56,7 +56,7 @@ let tests =
 
               Expect.equal actualResult.Storage
               <| toBinaryTree [| Some 0u; Some 1u; Some 2u; Some 3u; Some 0u; Some 1u; Some 2u; Some 3u |]
-              <| "pBFS should return 'Node(Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)), None)' "
+              <| "pBFS should return [|Some 0u; Some 1u; Some 2u; Some 3u; Some 0u; Some 1u; Some 2u; Some 3u|]"
 
           testCase "pBFS with graph and apexes 3"
           <| fun _ ->
