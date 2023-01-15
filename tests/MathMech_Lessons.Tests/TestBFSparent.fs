@@ -8,7 +8,7 @@ open Microsoft.FSharp.Collections
 open SparseMatrix
 open SparseVector
 open BFSparent
-
+open Test5
 
 let toInt (unsignedInt: uint) =
     try
@@ -31,7 +31,7 @@ let tests =
               let actualResult = parentBFS matrix [ 0u; 1u; 2u; 3u ]
 
               Expect.equal actualResult.Storage
-              <| Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u))
+              <| toBinaryTree [| Some 0u; Some 1u; Some 2u; Some 3u |]
               <| "pBFS should return 'Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u))'"
 
           testCase "pBFS with some graph and apexes 2"
@@ -55,7 +55,7 @@ let tests =
               let actualResult = parentBFS matrix [ 0u; 1u; 2u; 3u ]
 
               Expect.equal actualResult.Storage
-              <| Node(Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)), Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)))
+              <| toBinaryTree [| Some 0u; Some 1u; Some 2u; Some 3u; Some 0u; Some 1u; Some 2u; Some 3u |]
               <| "pBFS should return 'Node(Node(Node(Leaf 0u, Leaf 1u), Node(Leaf 2u, Leaf 3u)), None)' "
 
           testCase "pBFS with graph and apexes 3"
@@ -115,39 +115,11 @@ let tests =
 
                   arr[fst iCoord, snd iCoord] <- third i
 
+              let parent param index =
+                  let p1, _ = param
+                  p1, index
 
-              let naiveParentBFS start (arr: 'a option[,]) =
-                  let queue = Queue<uint * uint>()
-
-                  for i in start do
-                      queue.Enqueue(i, i)
-
-                  let rec helper result visited =
-                      if queue.Count = 0 then
-                          List.rev result
-                      else
-                          let x = queue.Dequeue()
-
-                          if Set.contains (fst x) visited then
-                              helper result visited
-                          else
-                              let iApex =
-                                  try
-                                      Convert.ToInt32(fst x)
-                                  with :? OverflowException ->
-                                      failwith $"outside the range"
-
-                              for i in 0 .. Array2D.length2 arr - 1 do
-                                  let value = arr[iApex, i]
-
-                                  if value <> Option.None then
-                                      queue.Enqueue(uint i, fst x)
-
-                              helper (x :: result) (visited.Add(fst x))
-
-                  helper [] Set.empty
-
-              let list = naiveParentBFS start arr
+              let list = naiveBFS start arr parent
               let answers = Array.create (int size) Option.None
 
               for i in 0 .. list.Length - 1 do
