@@ -13,7 +13,7 @@ let naiveBFS start (arr: 'a option[,]) f =
     let queue = Queue<uint * uint>()
 
     for i in start do
-        queue.Enqueue(i, snd (f (0u, 0u) i))
+        queue.Enqueue(i, snd(f (0u, 0u) i))
 
     let rec helper result visited =
         if queue.Count = 0 then
@@ -34,7 +34,7 @@ let naiveBFS start (arr: 'a option[,]) f =
                     let value = arr[iApex, i]
 
                     if value <> Option.None then
-                        queue.Enqueue(uint i, fst (f x 1u))
+                        queue.Enqueue(uint i, fst(f x 1u))
 
                 helper (x :: result) (visited.Add(fst x))
 
@@ -155,13 +155,13 @@ let tests =
                       with :? OverflowException ->
                           failwith $"outside the range of the Int32 type."
 
-                  arr[fst iCoord, snd iCoord] <- third i
+                  arr[fst iCoord, snd iCoord] <- third i           
 
-              let normal param index =
-                  let _, p2 = param
-                  p2 + 1u, 0u
+              let usual param index =
+                let _, p2 = param
+                p2 + 1u, 0u
 
-              let list = naiveBFS start arr normal
+              let list = naiveBFS start arr usual
               let answers = Array.create (int size) Option.None
 
               for i in 0 .. list.Length - 1 do
