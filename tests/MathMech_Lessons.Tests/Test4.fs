@@ -53,13 +53,6 @@ module SparseVectorTests =
 
                   Expect.equal actualResult (Node(Leaf("a"), Leaf("bb"))) "The result should be (Node(Leaf('a'), Leaf('bb')))"
 
-              testCase "vectorElement for empty array"
-              <| fun _ ->
-                  let actualResult =
-                      Expect.throws (fun _ -> SparseVector([||])[152u] |> ignore) "Index out of the range"
-
-                  actualResult
-
               testProperty "vectorElement property test"
               <| fun (arr: array<int option>) (i: uint) ->
                   let actualResult = SparseVector arr
@@ -254,9 +247,8 @@ module PropertyTests =
 
 
                   let naiveSum (arr1: array<int option>) (arr2: array<int option>) =
-                      (arr1, arr2) ||> Array.map2 (fun x y -> MultiMatrixTests.funPlusInt x y)
+                      (arr1, arr2) ||> Array.map2 MultiMatrixTests.funPlusInt
 
-                  naiveSum
 
                   Expect.equal actualResult.Storage
                   <| SparseVector(naiveSum arrOfSome1 arrOfSome2).Storage

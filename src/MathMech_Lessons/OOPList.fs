@@ -2,66 +2,66 @@ module OOPListHW
 
 open MyListHW
 
-type OOPList<'value> =
+type IList<'Value> =
     interface
     end
 
-type List<'value>(head: 'value, tail: OOPList<'value>) =
-    interface OOPList<'value>
+type List<'Value>(head: 'Value, tail: IList<'Value>) =
+    interface IList<'Value>
     member this.Head = head
     member this.Tail = tail
 
-type EmptyList<'value>() =
-    interface OOPList<'value>
+type EmptyList<'Value>() =
+    interface IList<'Value>
 
 ///Функция concatenation добавляет к концу (tail) первого списка второй список
-let rec сoncatenation (lst1: OOPList<'value>) (lst2: OOPList<'value>) =
+let rec сoncatenation (lst1: IList<'Value>) (lst2: IList<'Value>) =
     match lst1 with
-    | :? EmptyList<'value> -> lst2
-    | :? List<'value> as lst1 -> List(lst1.Head, сoncatenation lst1.Tail lst2)
+    | :? EmptyList<'Value> -> lst2
+    | :? List<'Value> as lst1 -> List(lst1.Head, сoncatenation lst1.Tail lst2)
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция возвращает head
-let head (lst: OOPList<'value>) : 'value =
+let head (lst: IList<'Value>) : 'Value =
     match lst with
-    | :? List<'value> as lst -> lst.Head
+    | :? List<'Value> as lst -> lst.Head
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция возвращает tail
-let tail (lst: OOPList<'value>) : OOPList<'value> =
+let tail (lst: IList<'Value>) : IList<'Value> =
     match lst with
-    | :? List<'value> as lst -> lst.Tail
+    | :? List<'Value> as lst -> lst.Tail
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция возврашает длину List
-let rec lenght (lst: OOPList<'value>) =
+let rec lenght (lst: IList<'Value>) =
     match lst with
-    | :? EmptyList<'value> -> 0
-    | :? List<'value> as lst ->
+    | :? EmptyList<'Value> -> 0
+    | :? List<'Value> as lst ->
         lenght lst.Tail
         + 1
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///Функция преобразовывает MyList в OOPList
-let rec myList_OOPList (lst: MyList<'value>) =
+let rec myListToOOPList (lst: MyList<'Value>) =
     match lst with
-    | Empty -> EmptyList() :> OOPList<'value>
-    | Cons (head, tail) -> List(head, myList_OOPList tail)
+    | Empty -> EmptyList() :> IList<'Value>
+    | Cons (head, tail) -> List(head, myListToOOPList tail)
 
 ///Функция преобразовывает OOPList в MyList
-let rec OOPList_MyList (lst: OOPList<'value>) =
+let rec oopListToMyList (lst: IList<'Value>) =
     match lst with
-    | :? EmptyList<'value> -> Empty
-    | :? List<'value> as lst -> Cons(lst.Head, OOPList_MyList lst.Tail)
+    | :? EmptyList<'Value> -> Empty
+    | :? List<'Value> as lst -> Cons(lst.Head, oopListToMyList lst.Tail)
     | _ -> failwith $"You can use EmptyList or List types"
 
 ///BubbleSort
-let bubbleSort (lst: OOPList<'value>) =
-    let rec bubble (lst: OOPList<'value>) =
+let bubbleSort (lst: IList<'Value>) =
+    let rec bubble (lst: IList<'Value>) =
         match lst with
-        | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>
-        | :? List<'value> as lst ->
-            if lst.Tail :? EmptyList<'value> then
+        | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
+        | :? List<'Value> as lst ->
+            if lst.Tail :? EmptyList<'Value> then
                 lst
             elif lst.Head > head lst.Tail then
                 List(head lst.Tail, bubble (List(lst.Head, tail lst.Tail)))
@@ -69,7 +69,7 @@ let bubbleSort (lst: OOPList<'value>) =
                 List(lst.Head, bubble lst.Tail)
         | _ -> failwith $"You can use EmptyList or list types"
 
-    let mutable rez: OOPList<'value> = lst
+    let mutable rez: IList<'Value> = lst
 
     for i in 1 .. lenght lst do
         rez <- bubble rez
@@ -77,10 +77,10 @@ let bubbleSort (lst: OOPList<'value>) =
     rez
 
 ///Функция получает OOPList и значение, возвращает кортеж с двумя списками
-let rec separateList (lst: OOPList<'value>) a =
+let rec separateList (lst: IList<'Value>) a =
     match lst with
-    | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>, EmptyList() :> OOPList<'value>
-    | :? List<'value> as lst ->
+    | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>, EmptyList() :> IList<'Value>
+    | :? List<'Value> as lst ->
         let sorted = separateList lst.Tail a
 
         if
@@ -93,12 +93,12 @@ let rec separateList (lst: OOPList<'value>) a =
     | _ -> failwith $"You can use EmptyList or list types"
 
 ///QuickSort
-let quickSort (lst: OOPList<'value>) =
-    let rec quick (lst: OOPList<'value>) =
+let quickSort (lst: IList<'Value>) =
+    let rec quick (lst: IList<'Value>) =
         match lst with
-        | :? EmptyList<'value> -> EmptyList() :> OOPList<'value>
-        | :? List<'value> as lst ->
-            if lst.Tail :? EmptyList<'value> then
+        | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
+        | :? List<'Value> as lst ->
+            if lst.Tail :? EmptyList<'Value> then
                 List(lst.Head, EmptyList())
             else
                 let tailMinMax = separateList (List(head lst.Tail, tail lst.Tail)) lst.Head
@@ -107,15 +107,15 @@ let quickSort (lst: OOPList<'value>) =
 
     quick lst
 
-let rec OOPListToList lst : OOPList<'value> =
+let rec oopListToList lst : IList<'Value> =
     match lst with
-    | [] -> EmptyList() :> OOPList<'value>
-    | head :: tail -> List(head, OOPListToList tail)
+    | [] -> EmptyList() :> IList<'Value>
+    | head :: tail -> List(head, oopListToList tail)
 
-let rec listToOOPList (lst: OOPList<'value>) =
+let rec listToOOPList (lst: IList<'Value>) =
     match lst with
-    | :? EmptyList<'value> -> []
-    | :? List<'value> as lst ->
+    | :? EmptyList<'Value> -> []
+    | :? List<'Value> as lst ->
         lst.Head
         :: listToOOPList lst.Tail
     | _ -> failwith $"You can use EmptyList or list types"

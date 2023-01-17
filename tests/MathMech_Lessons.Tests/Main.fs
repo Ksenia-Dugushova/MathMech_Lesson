@@ -1,4 +1,4 @@
-namespace MathMech_Lessons.Tests
+namespace MathMechLessons.Tests
 
 module ExpectoTemplate =
 

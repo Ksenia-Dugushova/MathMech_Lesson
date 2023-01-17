@@ -9,7 +9,7 @@ open SparseMatrix
 open SparseVector
 open BFS
 
-let naiveBFS start (arr: 'a option[,]) f =
+let naiveBFS start (arr: 'A option[,]) f =
     let queue = Queue<uint * uint>()
 
     for i in start do
@@ -83,7 +83,7 @@ let tests =
                   [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
               let matrix = SparseMatrix(list, 4, 4)
-              let actualResult = BFS matrix [ 0u; 1u; 2u; 3u ]
+              let actualResult = bfs matrix [ 0u; 1u; 2u; 3u ]
 
               Expect.equal actualResult.Storage
               <| Node(Node(Leaf 0u, Leaf 0u), Node(Leaf 0u, Leaf 0u))
@@ -95,7 +95,7 @@ let tests =
                   [ (0u, 1u, Some 4); (1u, 0u, Some 4); (1u, 3u, Some 9); (3u, 1u, Some 9) ]
 
               let matrix = SparseMatrix(list, 4, 4)
-              let actualResult = BFS matrix [ 0u ]
+              let actualResult = bfs matrix [ 0u ]
 
               Expect.equal actualResult.Storage
               <| Node(Node(Leaf 0u, Leaf 1u), Node(None, Leaf 2u))
@@ -105,7 +105,7 @@ let tests =
           <| fun _ ->
               let list = []
               let matrix = SparseMatrix(list, 0, 0)
-              let actualResult = BFS matrix []
+              let actualResult = bfs matrix []
 
               Expect.equal actualResult.Storage <| None <| "BFS should return 'None'"
 
@@ -130,7 +130,7 @@ let tests =
               let matrix = SparseMatrix(resultList, float size, float size)
 
               let result1 =
-                  BFS
+                  bfs
                       matrix
                       (if resultList.Length <> 0 then
                            [ first resultList.Head ]
@@ -151,11 +151,17 @@ let tests =
 
                   let iCoord =
                       try
-                          Convert.ToInt32(x), Convert.ToInt32(y)
+                          Convert.ToInt32(x)
                       with :? OverflowException ->
                           failwith $"outside the range of the Int32 type."
 
-                  arr[fst iCoord, snd iCoord] <- third i
+                  let pCoord =
+                      try
+                          Convert.ToInt32(y)
+                      with :? OverflowException ->
+                          failwith $"outside the range of the Int32 type."
+
+                  arr[iCoord, pCoord] <- third i
 
               let usual param index =
                   let _, p2 = param
