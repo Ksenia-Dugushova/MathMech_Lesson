@@ -34,7 +34,7 @@ let bfs (gMtx: SparseMatrix<'Value>) (startV: list<uint>) =
     let visited =
         addVector (plusVisited 0u) front (SparseVector(BinaryTree.None, gMtx.ColumnCount))
 
-    let rec inner (front: SparseVector<'A>) visited iter =
+    let rec inner (front: SparseVector<_>) visited iter =
         if front.IsEmpty then
             visited
         else
