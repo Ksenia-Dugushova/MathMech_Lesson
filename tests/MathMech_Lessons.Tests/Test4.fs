@@ -53,6 +53,13 @@ module SparseVectorTests =
 
                   Expect.equal actualResult (Node(Leaf("a"), Leaf("bb"))) "The result should be (Node(Leaf('a'), Leaf('bb')))"
 
+              testCase "vectorElement for empty array"
+              <| fun _ ->
+                  let actualResult =
+                      Expect.throws (fun _ -> SparseVector([||])[152u] |> ignore) "Index out of the range"
+
+                  actualResult
+
               testProperty "vectorElement property test"
               <| fun (arr: array<int option>) (i: uint) ->
                   let actualResult = SparseVector arr
