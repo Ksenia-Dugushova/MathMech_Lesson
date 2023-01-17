@@ -226,7 +226,7 @@ var assemblies = [
     "classes": [
       { "name": "BFS", "rp": "MathMech_Lessons_BFS.html", "cl": 20, "ucl": 4, "cal": 24, "tl": 45, "ct": "LineCoverage", "mc": "-", "cb": 13, "tb": 18, "lch": [], "bch": [], "hc": [] },
       { "name": "MathMechLessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "MultiMatrix", "rp": "MathMech_Lessons_MultiMatrix.html", "cl": 41, "ucl": 4, "cal": 45, "tl": 76, "ct": "LineCoverage", "mc": "-", "cb": 26, "tb": 28, "lch": [], "bch": [], "hc": [] },
+      { "name": "MultiMatrix", "rp": "MathMech_Lessons_MultiMatrix.html", "cl": 38, "ucl": 7, "cal": 45, "tl": 76, "ct": "LineCoverage", "mc": "-", "cb": 25, "tb": 28, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHW", "rp": "MathMech_Lessons_MyListHW.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 19, "tb": 20, "lch": [], "bch": [], "hc": [] },
       { "name": "OOPListHW", "rp": "MathMech_Lessons_OOPListHW.html", "cl": 50, "ucl": 14, "cal": 64, "tl": 121, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 48, "lch": [], "bch": [], "hc": [] },
       { "name": "SparseMatrix", "rp": "MathMech_Lessons_SparseMatrix.html", "cl": 91, "ucl": 6, "cal": 97, "tl": 189, "ct": "LineCoverage", "mc": "-", "cb": 65, "tb": 68, "lch": [], "bch": [], "hc": [] },
