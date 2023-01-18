@@ -3,9 +3,9 @@ module SparseMatrix
 open System
 open SparseVector
 
-type QuadTree<'value> =
-    | Node of QuadTree<'value> * QuadTree<'value> * QuadTree<'value> * QuadTree<'value>
-    | Leaf of 'value
+type QuadTree<'Value> =
+    | Node of QuadTree<'Value> * QuadTree<'Value> * QuadTree<'Value> * QuadTree<'Value>
+    | Leaf of 'Value
     | None
 
 let square arr =
@@ -28,9 +28,9 @@ let toSquareValue length1 length2 =
     else
         uint (2.0 ** ceil (max logarithm1 logarithm2))
 
-type SquareArray<'value> =
+type SquareArray<'Value> =
     struct
-        val Memory: option<'value>[,]
+        val Memory: option<'Value>[,]
         val HeadOfRow: uint
         val HeadOfColumn: uint
         val Length: uint
@@ -48,7 +48,7 @@ let toQuadTree arr =
         | Option.None -> QuadTree.None
         | Some value -> QuadTree.Leaf value
 
-    let rec quadTreeMaking (arr: SquareArray<'value>) =
+    let rec quadTreeMaking (arr: SquareArray<'Value>) =
         let memory = arr.Memory
         let head1 = arr.HeadOfRow
         let head2 = arr.HeadOfColumn
@@ -84,7 +84,7 @@ let first (x, _, _) = x
 let second (_, x, _) = x
 let third (_, _, x) = x
 
-let toQTree (tripleList: list<uint * uint * Option<'value>>) rows columns =
+let toQTree (tripleList: list<uint * uint * Option<'Value>>) rows columns =
     let partition list length =
         let rec f list one two three four =
             match list with
@@ -104,7 +104,7 @@ let toQTree (tripleList: list<uint * uint * Option<'value>>) rows columns =
 
     let rec quadTreeFormation list length =
         if length = 1u then
-            if List.length list = 0 then
+            if List.isEmpty list then
                 QuadTree.None
             else
                 match third list[0] with
@@ -130,13 +130,13 @@ let toQTree (tripleList: list<uint * uint * Option<'value>>) rows columns =
         quadTreeFormation tripleList squareLength
 
 
-type SparseMatrix<'value when 'value: equality> =
+type SparseMatrix<'Value when 'Value: equality> =
     struct
-        val Storage: QuadTree<'value>
+        val Storage: QuadTree<'Value>
         val RowCount: uint
         val ColumnCount: uint
 
-        new(arr: option<'value>[,]) =
+        new(arr: option<'Value>[,]) =
             { Storage = toQuadTree arr
               RowCount = Array2D.length1 arr |> uint
               ColumnCount = Array2D.length2 arr |> uint }
@@ -148,7 +148,7 @@ type SparseMatrix<'value when 'value: equality> =
 
         member this.Item
             with get (a, b) =
-                let matrixElement a b (matrix: SparseMatrix<'value>) =
+                let matrixElement a b (matrix: SparseMatrix<'Value>) =
                     let rec element a b size tree =
                         match tree with
                         | QuadTree.Leaf value -> Some(value)

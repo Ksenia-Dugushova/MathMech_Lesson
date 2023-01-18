@@ -224,7 +224,7 @@ var assemblies = [
   {
     "name": "MathMech_Lessons",
     "classes": [
-      { "name": "MathMech_lessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "MathMechLessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHW", "rp": "MathMech_Lessons_MyListHW.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 19, "tb": 20, "lch": [], "bch": [], "hc": [] },
       { "name": "OOPListHW", "rp": "MathMech_Lessons_OOPListHW.html", "cl": 50, "ucl": 14, "cal": 64, "tl": 121, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 48, "lch": [], "bch": [], "hc": [] },
     ]},
