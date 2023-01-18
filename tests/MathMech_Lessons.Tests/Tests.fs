@@ -1,4 +1,4 @@
-namespace MathMech_lessons.Tests
+namespace MathMechLessons.Tests
 
 open FsCheck
 open Expecto
@@ -116,7 +116,7 @@ module OOPList =
                   let actualResult =
                       let lst1 = EmptyList()
                       let lst2 = EmptyList()
-                      OOPList_MyList(сoncatenation lst1 lst2)
+                      oopListToMyList (сoncatenation lst1 lst2)
 
                   Expect.equal actualResult MyListHW.Empty "The result should be MyListHW.Empty"
 
@@ -125,7 +125,7 @@ module OOPList =
                   let actualResult =
                       let lst1 = List(5, EmptyList())
                       let lst2 = List(5, EmptyList())
-                      OOPList_MyList(сoncatenation lst1 lst2)
+                      oopListToMyList (сoncatenation lst1 lst2)
 
                   Expect.equal actualResult (MyListHW.Cons(5, MyListHW.Cons(5, MyListHW.Empty))) "The result should be MyListHW.Cons(5, MyListHW.Cons(5, MyListHW.Empty)))"
 
@@ -133,7 +133,7 @@ module OOPList =
               <| fun _ ->
                   let actualResult =
                       let lst = List(1, List(2, EmptyList()))
-                      OOPList_MyList(bubbleSort lst)
+                      oopListToMyList (bubbleSort lst)
 
                   Expect.equal actualResult (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))) "The result should be MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))"
 
@@ -141,7 +141,7 @@ module OOPList =
               <| fun _ ->
                   let actualResult =
                       let lst = List("a", List("b", EmptyList()))
-                      OOPList_MyList(bubbleSort lst)
+                      oopListToMyList (bubbleSort lst)
 
                   Expect.equal actualResult (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty))) "The result should be MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))"
 
@@ -149,7 +149,7 @@ module OOPList =
               <| fun _ ->
                   let actualResult =
                       let lst = List(1, List(2, EmptyList()))
-                      OOPList_MyList(quickSort lst)
+                      oopListToMyList (quickSort lst)
 
                   Expect.equal actualResult (MyListHW.Cons(1, MyListHW.Cons(2, MyListHW.Empty))) "The result should be MyListHW.Cons(1, MyListHW.Cons(3, MyListHW.Empty))"
 
@@ -157,7 +157,7 @@ module OOPList =
               <| fun _ ->
                   let actualResult =
                       let lst = List("a", List("b", EmptyList()))
-                      OOPList_MyList(quickSort lst)
+                      oopListToMyList (quickSort lst)
 
                   Expect.equal actualResult (MyListHW.Cons("a", MyListHW.Cons("b", MyListHW.Empty))) "The result should be MyListHW.Cons('a', MyListHW.Cons('b', MyListHW.Empty))"
 
@@ -165,12 +165,12 @@ module OOPList =
               <| fun (lst: list<int>) ->
                   Expect.equal
                   <| List.sort lst
-                  <| listToOOPList (bubbleSort (OOPListToList lst))
+                  <| listToOOPList (bubbleSort (oopListToList lst))
                   <| "The results should be the same"
 
               testProperty "Checking the sorts 2 OOPList"
               <| fun (lst: list<string>) ->
                   Expect.equal
                   <| List.sort lst
-                  <| listToOOPList (bubbleSort (OOPListToList lst))
+                  <| listToOOPList (bubbleSort (oopListToList lst))
                   <| "The results should be the same" ]

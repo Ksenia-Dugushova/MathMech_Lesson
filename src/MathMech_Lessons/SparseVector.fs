@@ -2,9 +2,9 @@ module SparseVector
 
 open System
 
-type Vector<'value> =
+type Vector<'Value> =
     struct
-        val Memory: array<'value option>
+        val Memory: array<'Value option>
         val Head: uint
         val Lenght: uint
 
@@ -15,12 +15,12 @@ type Vector<'value> =
               Lenght = length }
     end
 
-type BinaryTree<'value> =
+type BinaryTree<'Value> =
     | None
-    | Leaf of 'value
-    | Node of BinaryTree<'value> * BinaryTree<'value>
+    | Leaf of 'Value
+    | Node of BinaryTree<'Value> * BinaryTree<'Value>
 
-let square (arr: option<'value>[]) =
+let square (arr: option<'Value>[]) =
     let length = arr.Length
     let logarithm = Math.Log(length, 2)
 
@@ -43,7 +43,7 @@ let toBinaryTree arr =
         | Option.None -> BinaryTree.None
         | Some value -> BinaryTree.Leaf(value)
 
-    let rec binaryTreeMaking (vec: Vector<'value>) =
+    let rec binaryTreeMaking (vec: Vector<'Value>) =
         let head = vec.Head
         let length = vec.Lenght
         let memory = vec.Memory
@@ -64,13 +64,13 @@ let toBinaryTree arr =
 
     binaryTreeMaking (Vector(arr, 0u, square arr))
 
-let noneDestroyer (tree: BinaryTree<'value>) =
+let noneDestroyer (tree: BinaryTree<'Value>) =
     match tree with
     | Leaf value -> Leaf value
     | Node (None, None) -> None
     | _ -> tree
 
-let partition (list: List<uint * 'a>) length =
+let partition (list: List<uint * 'A>) length =
     let rec f list left right =
         match list with
         | [] -> left, right
@@ -112,8 +112,8 @@ let ceilPowTwo a =
     else looper a 1u
 
 
-type SparseVector<'value when 'value: equality> =
-    val Storage: BinaryTree<'value>
+type SparseVector<'Value when 'Value: equality> =
+    val Storage: BinaryTree<'Value>
     val Length: uint
 
     new(arr) =
@@ -128,7 +128,7 @@ type SparseVector<'value when 'value: equality> =
 
     member this.Item
         with get i =
-            let vectorElement i (vector: SparseVector<'value>) =
+            let vectorElement i (vector: SparseVector<'Value>) =
                 let rec element i size tree =
                     match tree with
                     | BinaryTree.Leaf value -> Some(value)
@@ -149,7 +149,7 @@ type SparseVector<'value when 'value: equality> =
 
             vectorElement i this
 
-    member this.isEmpty =
+    member this.IsEmpty =
         match this.Storage with
         | BinaryTree.None -> true
         | _ -> false
@@ -163,14 +163,14 @@ let valueOrNone z =
     | Option.None -> BinaryTree.None
     | Some value -> BinaryTree.Leaf value
 
-let noneBreak (tree: BinaryTree<'value>) =
+let noneBreak (tree: BinaryTree<'Value>) =
     match tree with
     | Leaf value -> Leaf value
     | Node (None, None) -> None
     | _ -> tree
 
-let addVector (fPlus: option<'value1> -> option<'value2> -> option<'value3>) (vector1: SparseVector<'value1>) (vector2: SparseVector<'value2>) : SparseVector<'value3> =
-    let rec addTrees (tree1: BinaryTree<'value1>) (tree2: BinaryTree<'value2>) : BinaryTree<'value3> =
+let addVector (fPlus: option<'Value1> -> option<'Value2> -> option<'Value3>) (vector1: SparseVector<'Value1>) (vector2: SparseVector<'Value2>) : SparseVector<'Value3> =
+    let rec addTrees (tree1: BinaryTree<'Value1>) (tree2: BinaryTree<'Value2>) : BinaryTree<'Value3> =
         match tree1, tree2 with
         | None, None -> BinaryTree.None
         | Leaf value1, Leaf value2 -> fPlus (Some value1) (Some value2) |> valueOrNone

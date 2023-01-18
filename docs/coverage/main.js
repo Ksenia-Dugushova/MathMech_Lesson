@@ -224,18 +224,33 @@ var assemblies = [
   {
     "name": "MathMech_Lessons",
     "classes": [
-      { "name": "MathMech_lessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "BFS", "rp": "MathMech_Lessons_BFS.html", "cl": 20, "ucl": 4, "cal": 24, "tl": 45, "ct": "LineCoverage", "mc": "-", "cb": 13, "tb": 18, "lch": [], "bch": [], "hc": [] },
+      { "name": "MathMechLessons.Main", "rp": "MathMech_Lessons_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "MultiMatrix", "rp": "MathMech_Lessons_MultiMatrix.html", "cl": 38, "ucl": 7, "cal": 45, "tl": 76, "ct": "LineCoverage", "mc": "-", "cb": 25, "tb": 28, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHW", "rp": "MathMech_Lessons_MyListHW.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 19, "tb": 20, "lch": [], "bch": [], "hc": [] },
       { "name": "OOPListHW", "rp": "MathMech_Lessons_OOPListHW.html", "cl": 50, "ucl": 14, "cal": 64, "tl": 121, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 48, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseMatrix", "rp": "MathMech_Lessons_SparseMatrix.html", "cl": 91, "ucl": 6, "cal": 97, "tl": 189, "ct": "LineCoverage", "mc": "-", "cb": 65, "tb": 68, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseVector", "rp": "MathMech_Lessons_SparseVector.html", "cl": 85, "ucl": 12, "cal": 97, "tl": 187, "ct": "LineCoverage", "mc": "-", "cb": 62, "tb": 72, "lch": [], "bch": [], "hc": [] },
+      { "name": "TreesHW", "rp": "MathMech_Lessons_TreesHW.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 29, "ct": "LineCoverage", "mc": "-", "cb": 2, "tb": 2, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
+      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
+      { "name": "NPath complexity", "explanationUrl": "https://modess.io/npath-complexity-cyclomatic-complexity-explained" },
+      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
 ];
 
 var riskHotspots = [
+  {
+    "assembly": "MathMech_Lessons", "class": "SparseMatrix", "reportPath": "MathMech_Lessons_SparseMatrix.html", "methodName": "Microsoft.FSharp.Core.FSharpOption`1<a> SparseMatrix/element@152-1T::Invoke(System.UInt32,System.UInt32,System.UInt32,SparseMatrix/QuadTree`1<a>)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 153,
+    "metrics": [
+      { "value": 9, "exceeded": false },
+      { "value": 256, "exceeded": true },
+      { "value": 9, "exceeded": false },
+    ]},
 ];
 
 var branchCoverageAvailable = true;

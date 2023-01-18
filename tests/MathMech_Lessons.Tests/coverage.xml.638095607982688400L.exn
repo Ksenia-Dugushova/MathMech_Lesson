@@ -1,0 +1,30 @@
+ModuleId = "C4-3E-6F-1E-2A-97-76-95-28-2A-87-C2-E9-E7-CD-1D-08-F2-14-3C"
+hitPointId = 4
+context = Null
+exception = System.Collections.Generic.KeyNotFoundException: The given key '4' was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at AltCover.Recorder.Counter.addSingleVisit(Dictionary`2 counts, String moduleId, Int32 hitPointId, Track context) in C:\projects\altcover\AltCover.Recorder\Base.fs:line 401
+   at AltCover.Recorder.Instance.I.addVisit(String moduleId, Int32 hitPointId, Track context) in C:\projects\altcover\AltCover.Recorder\Recorder.fs:line 328
+   at AltCover.Recorder.Instance.I.logException[a,b,c,d](a moduleId, b hitPointId, c context, d x)
+   at AltCover.Recorder.Instance.I.addVisit(String moduleId, Int32 hitPointId, Track context)
+   at AltCover.Recorder.Instance.I.visitImpl@395.Invoke(String moduleId, Int32 hitPointId, Track context)
+   at AltCover.Recorder.Instance.I.visitImpl(String moduleId, Int32 hitPointId, Track context)
+   at BFS.add[a,b](FSharpOption`1 x, FSharpOption`1 y)
+   at BFS.newFront@41-1.Invoke(FSharpOption`1 x, FSharpOption`1 y)
+   at SparseVector.addTrees@174.Invoke(BinaryTree`1 tree1, BinaryTree`1 tree2)
+   at SparseVector.addVector[Value1,Value2,Value3](FSharpFunc`2 fPlus, SparseVector`1 vector1, SparseVector`1 vector2)
+   at MultiMatrix.multiTree@9.Invoke(BinaryTree`1 binaryTree, QuadTree`1 quadTree)
+   at MultiMatrix.multiTree@9.Invoke(BinaryTree`1 binaryTree, QuadTree`1 quadTree)
+   at MultiMatrix.multiplication[Value3,Value1,Value2](FSharpFunc`2 plus, FSharpFunc`2 multiOperation, SparseVector`1 vector, SparseMatrix`1 matrix)
+   at BFS.inner@38.Invoke(SparseVector`1 front, SparseVector`1 visited, UInt32 iter)
+   at BFS.bfs[Value](SparseMatrix`1 gMtx, FSharpList`1 startV)
+   at Test5.tests@81-21.Invoke(Unit _arg2)
+   at Expecto.Impl.execTestAsync@569-1.Invoke(Unit unitVar)
+   at Microsoft.FSharp.Control.AsyncPrimitives.CallThenInvoke[T,TResult](AsyncActivation`1 ctxt, TResult result1, FSharpFunc`2 part2)
+   at Microsoft.FSharp.Control.Trampoline.Execute(FSharpFunc`2 firstAction)
+   at <StartupCode$FSharp-Core>.$Async.clo@181-16.Invoke(Object o)
+   at System.Threading.QueueUserWorkItemCallbackDefaultContext.Execute()
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+

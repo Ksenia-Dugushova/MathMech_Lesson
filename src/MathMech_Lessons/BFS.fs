@@ -27,15 +27,15 @@ let plusVisited iter x y =
     | Some _, Option.None -> Some iter
     | _ -> failwith $"Something went wrong"
 
-let BFS (gMtx: SparseMatrix<'value>) (startV: list<uint>) =
+let bfs (gMtx: SparseMatrix<'Value>) (startV: list<uint>) =
     let apexes = List.map (fun x -> (x, ())) startV
     let front = SparseVector(apexes, gMtx.ColumnCount)
 
     let visited =
         addVector (plusVisited 0u) front (SparseVector(BinaryTree.None, gMtx.ColumnCount))
 
-    let rec inner (front: SparseVector<'a>) visited iter =
-        if front.isEmpty then
+    let rec inner (front: SparseVector<_>) visited iter =
+        if front.IsEmpty then
             visited
         else
             let newFront = addVector mask (multiplication add mult front gMtx) visited
