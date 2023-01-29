@@ -3,9 +3,9 @@ module TreesHW
 open System.Collections.Generic
 open MyListHW
 
-type SomeTree<'value> =
-    | Leaf of value: 'value
-    | Node of parents: 'value * nodes: array<SomeTree<'value>>
+type SomeTree<'Value> =
+    | Leaf of value: 'Value
+    | Node of parents: 'Value * nodes: array<SomeTree<'Value>>
 
 let rec foldTree stacker acc tree =
     match tree with
@@ -13,9 +13,9 @@ let rec foldTree stacker acc tree =
     | Node (value, children) -> Array.fold (foldTree stacker) (stacker acc value) children
 
 let uniqueElements tree =
-    let hashSet = HashSet<'value>()
+    let hashSet = HashSet<'Value>()
 
-    let hashSetTree (hashSet: HashSet<'value>) value =
+    let hashSetTree (hashSet: HashSet<'Value>) value =
         hashSet.Add value
         |> ignore
 

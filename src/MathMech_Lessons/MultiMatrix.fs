@@ -1,10 +1,10 @@
-module MultiplicationMatrix
+module MultiMatrix
 
 open SparseMatrix
 open SparseVector
 open System
 
-let multiplication plus (multiOperation: option<'value1> -> option<'value2> -> option<'value3>) (vector: SparseVector<'value1>) (matrix: SparseMatrix<'value2>) : SparseVector<'value3> =
+let multiplication plus (multiOperation: option<'Value1> -> option<'Value2> -> option<'Value3>) (vector: SparseVector<'Value1>) (matrix: SparseMatrix<'Value2>) : SparseVector<'Value3> =
     let rec multiTree binaryTree quadTree =
         match binaryTree, quadTree with
         | BinaryTree.None, _
@@ -43,14 +43,14 @@ let multiplication plus (multiOperation: option<'value1> -> option<'value2> -> o
             <| BinaryTree.Node(left, right)
             <| QuadTree.Node(QuadTree.Leaf value, QuadTree.Leaf value, QuadTree.Leaf value, QuadTree.Leaf value)
 
-    let rec CutBinaryTree (tree: BinaryTree<'value>) desiredSize currentSize =
+    let rec cutBinaryTree (tree: BinaryTree<'Value>) desiredSize currentSize =
         match tree with
-        | BinaryTree.Node (fst, _) when desiredSize <> currentSize -> CutBinaryTree fst desiredSize (currentSize / 2)
+        | BinaryTree.Node (fst, _) when desiredSize <> currentSize -> cutBinaryTree fst desiredSize (currentSize / 2u)
         | _ -> tree
 
-    let rec binareTreeMaker (tree: BinaryTree<'value>) desiredSize currentSize =
-        if desiredSize <> currentSize then
-            binareTreeMaker (BinaryTree.Node(tree, BinaryTree.None)) desiredSize (currentSize * 2)
+    let rec binareTreeMaker (tree: BinaryTree<'Value>) desiredSize splitSize =
+        if desiredSize <> splitSize then
+            binareTreeMaker (BinaryTree.Node(tree, BinaryTree.None)) desiredSize (splitSize * 2u)
         else
             tree
 
@@ -64,14 +64,13 @@ let multiplication plus (multiOperation: option<'value1> -> option<'value2> -> o
             else
                 multiTree vector.Storage matrix.Storage
 
-        let splitTree =
+        let cutTree =
             if matrix.RowCount > matrix.ColumnCount then
-                let desiredSize = int (2.0 ** ceil (Math.Log(matrix.ColumnCount, 2)))
-
-                CutBinaryTree makeTree desiredSize powerSizeM
+                let desiredSize = uint (2.0 ** ceil (Math.Log(float (matrix.ColumnCount), 2)))
+                cutBinaryTree makeTree desiredSize powerSizeM
             else
                 makeTree
 
-        SparseVector(splitTree, vector.Length)
+        SparseVector(cutTree, vector.Length)
     else
-        failwith "Something went wrong"
+        failwith $"Something went wrong"
