@@ -254,9 +254,8 @@ module PropertyTests =
 
 
                   let naiveSum (arr1: array<int option>) (arr2: array<int option>) =
-                      (arr1, arr2) ||> Array.map2 (fun x y -> MultiMatrixTests.funPlusInt x y)
+                      (arr1, arr2) ||> Array.map2 MultiMatrixTests.funPlusInt
 
-                  naiveSum
 
                   Expect.equal actualResult.Storage
                   <| SparseVector(naiveSum arrOfSome1 arrOfSome2).Storage

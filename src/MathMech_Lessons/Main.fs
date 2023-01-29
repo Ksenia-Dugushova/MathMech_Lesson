@@ -1,4 +1,4 @@
-namespace MathMech_lessons
+namespace MathMechLessons
 
 module Main =
 
